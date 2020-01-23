@@ -1,0 +1,4 @@
+.vscode/
+weather/app/__pycache__/
+weather/__pycache__
+weather/config.py
