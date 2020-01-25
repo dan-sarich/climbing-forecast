@@ -7,6 +7,7 @@ services:
         restart: always
         environment: 
             - APP_NAME=weather-app
+            - FLASK_ENV=development
         expose: 
             - 8080
         volumes: 

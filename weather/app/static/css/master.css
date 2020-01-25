@@ -1,0 +1,7 @@
+#locationSearch {
+	background-color: #46515d;
+	border-color: #4e5965;
+}
+#locationSearch::-webkit-input-placeholder {
+	color: #bbb;
+}

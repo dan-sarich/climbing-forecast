@@ -13,9 +13,11 @@ import webbrowser
 import requests
 import json
 
+
 @app.route("/")
 def index():
-    return render_template('index.html')
+    PLACES_API_key = app.config['PLACES_API']
+    return render_template('index.html', apiKey=PLACES_API_key)
 
 # This python function requires the coordinates of a place in lat and lon and returns: time, month, day, hour, whetherstatus, actual temperature, temp felt in sun, temp felt in shade,cloudiness,wind_act,humidity_act,rain_act,Probability fun in sun and shade
 @app.route('/data', methods=['POST'])
@@ -26,7 +28,7 @@ def getconditions():
     data = request.get_json(force=True)
     print(data)  # parse as JSON
     lat = data['lat']
-    lon = data['lon']
+    lng = data['lng']
 
     # setting optimal conditions
     #Temperature in C
@@ -72,12 +74,12 @@ def getconditions():
     IR_violent = special.erfc((Rspace-Rcut_violent)*2.35482/Rwid_violent)/2
     # get timezone
     a = requests.get(
-        'http://api.timezonedb.com/v2.1/get-time-zone?key=CO1O5TJW8L3Y&format=json&by=position&lat='+str(lat)+'&lng='+str(lon))
+        'http://api.timezonedb.com/v2.1/get-time-zone?key=CO1O5TJW8L3Y&format=json&by=position&lat='+str(lat)+'&lng='+str(lng))
     Timezone = a.json()['zoneName']
     # get the wheather
     API_key = app.config['OWM_API_KEY']
     owm = OWM(API_key)
-    fc = owm.three_hours_forecast_at_coords(int(lat), int(lon))
+    fc = owm.three_hours_forecast_at_coords(int(lat), int(lng))
     f = fc.get_forecast()
     # Calculations alculating probability
     time = []
@@ -225,16 +227,56 @@ def getconditions():
             "timeday": timeday,
             "timehr": timehr,
             "status": status,
-            "temperature_act": temperature_act,
-            "Tsun_felt": Tsun_felt,
-            "Tshade_felt": Tshade_felt,
-            "cloudiness": cloudiness,
-            "wind_act": wind_act,
-            "humidity_act": humidity_act,
-            "rain_act": rain_act,
-            "snow_act": snow_act,
-            "P_sun": P_sun,
-            "P_shadow": P_shadow
+            "chart_pairing": {
+                "rain_chart": {
+                    "rows": [time, rain_act],
+                    "labels": ["Time", "Rain (mm)"],
+                    "title": "Rain",
+                    "fullScreen": False
+                },
+                "snow_chart": {
+                    "rows": [time, snow_act],
+                    "labels": ["Time", "Snow (mm)"],
+                    "title": "Snow",
+                    "fullScreen": False
+                },
+                "cloudiness_chart": {
+                    "rows": [time, cloudiness],
+                    "labels": ["Time", "Cloudiness (%)"],
+                    "title": "Cloudiness",
+                    "fullScreen": False
+                },
+                "humidity_chart": {
+                    "rows": [time, humidity_act],
+                    "labels": ["Time", "Humidity (%)"],
+                    "title": "Humidity",
+                    "fullScreen": False
+                },
+                "wind_chart": {
+                    "rows": [time, wind_act],
+                    "labels": ["Time", "Wind (km/h)"],
+                    "title": "Wind",
+                    "fullScreen": False
+                },
+                "temperature_chart": {
+                    "rows": [time, temperature_act],
+                    "labels": ["Time", "Temperature (C)"],
+                    "title": "Temperature",
+                    "fullScreen": False
+                },
+                "temperature_felt_chart": {
+                    "rows": [time, Tsun_felt, Tshade_felt],
+                    "labels": ["Time", "Sun", "Shade"],
+                    "title": "Temperature Felt",
+                    "fullScreen": False
+                },
+                "fun_chart": {
+                    "rows": [time, P_sun, P_shadow],
+                    "labels": ["Time", "Sun", "Shade"],
+                    "title": "Climbing Fun",
+                    "fullScreen": True
+                }
+            }
         }
 
     return resp_json
