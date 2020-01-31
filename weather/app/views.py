@@ -229,51 +229,107 @@ def getconditions():
             "status": status,
             "chart_pairing": {
                 "rain_chart": {
-                    "rows": [time, rain_act],
-                    "labels": ["Time", "Rain (mm)"],
-                    "title": "Rain",
+                    "rows": [rain_act],
+                    "dataSet_labels": ["Accumulation (mm)"],
+                    "labels": time,
+                    "axis_labels": {
+                        "yAxis": "Accumulation (mm)",
+                        "xAxis": ""
+                    },
+                    "title": "Rain Accumulation",
+                    "format": "",
+                    "show_legend": "none",
                     "fullScreen": False
                 },
                 "snow_chart": {
-                    "rows": [time, snow_act],
-                    "labels": ["Time", "Snow (mm)"],
-                    "title": "Snow",
+                    "rows": [snow_act],
+                    "dataSet_labels": ["Accumulation (mm)"],
+                    "labels": time,
+                    "axis_labels": {
+                        "yAxis": "Accumulation (mm)",
+                        "xAxis": ""
+                    },
+                    "title": "Snow Accumulation",
+                    "format": "",
+                    "show_legend": "none",
                     "fullScreen": False
                 },
                 "cloudiness_chart": {
-                    "rows": [time, cloudiness],
-                    "labels": ["Time", "Cloudiness (%)"],
+                    "rows": [cloudiness],
+                    "dataSet_labels": ["Cloudiness (%)"],
+                    "labels": time,
+                    "axis_labels": {
+                        "yAxis": "Cloudiness (%)",
+                        "xAxis": ""
+                    },
                     "title": "Cloudiness",
+                    "format": "percent",
+                    "show_legend": "none",
                     "fullScreen": False
                 },
                 "humidity_chart": {
-                    "rows": [time, humidity_act],
-                    "labels": ["Time", "Humidity (%)"],
+                    "rows": [humidity_act],
+                    "dataSet_labels": ["Humidity (%)"],
+                    "labels": time,
                     "title": "Humidity",
+                    "axis_labels": {
+                        "yAxis": "Humidity (%)",
+                        "xAxis": ""
+                    },
+                    "format": "percent",
+                    "show_legend": "none",
                     "fullScreen": False
                 },
                 "wind_chart": {
-                    "rows": [time, wind_act],
-                    "labels": ["Time", "Wind (km/h)"],
+                    "rows": [wind_act],
+                    "dataSet_labels": ["Wind (km/h)"],
+                    "labels": time,
                     "title": "Wind",
+                    "axis_labels": {
+                        "yAxis": "Wind (km/h)",
+                        "xAxis": ""
+                    },
+                    "format": "",
+                    "show_legend": "none",
                     "fullScreen": False
                 },
                 "temperature_chart": {
-                    "rows": [time, temperature_act],
-                    "labels": ["Time", "Temperature (C)"],
+                    "rows": [temperature_act],
+                    "dataSet_labels": ["Temperature (C)"],
+                    "labels": time,
                     "title": "Temperature",
-                    "fullScreen": False
-                },
-                "temperature_felt_chart": {
-                    "rows": [time, Tsun_felt, Tshade_felt],
-                    "labels": ["Time", "Sun", "Shade"],
-                    "title": "Temperature Felt",
+                    "format": "",
+                    "axis_labels": {
+                        "yAxis": "Temperature (C)",
+                        "xAxis": ""
+                    },
+                    "show_legend": "none",
                     "fullScreen": False
                 },
                 "fun_chart": {
-                    "rows": [time, P_sun, P_shadow],
-                    "labels": ["Time", "Sun", "Shade"],
+                    "rows": [P_sun, P_shadow],
+                    "dataSet_labels": ["In Sun", "In Shade"],
+                    "labels": time,
                     "title": "Climbing Fun",
+                    "format": "percent",
+                    "axis_labels": {
+                        "yAxis": "Climbing Fun (%)",
+                        "xAxis": ""
+                    },
+                    "show_legend": "",
+                    "fullScreen": True
+                },
+                "temperature_felt_chart": {
+                    "rows": [Tsun_felt, Tshade_felt],
+                    "dataSet_labels": ["Temp in Sun", "Temp in Shade"],
+                    "labels": time,
+                    "title": "Temperature Felt",
+                    "format": "",
+                    "axis_labels": {
+                        "yAxis": "Temperature Felt (C)",
+                        "xAxis": ""
+                    },
+                    "show_legend": "",
                     "fullScreen": True
                 }
             }

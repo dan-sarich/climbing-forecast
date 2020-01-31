@@ -1,7 +1,13 @@
-#locationSearch {
-	background-color: #46515d;
-	border-color: #4e5965;
-}
 #locationSearch::-webkit-input-placeholder {
 	color: #bbb;
+}
+.chartsView {
+	margin-top: 75px;
+}
+.fixed-top {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 999;
 }
