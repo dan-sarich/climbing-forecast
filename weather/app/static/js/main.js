@@ -10,7 +10,7 @@ var init = function () {
 		types  : [ 'geocode' ],
 		fields : [ 'formatted_address', 'geometry.location' ]
 	});
-
+	loadRecients();
 	google.maps.event.addListener(ac, 'place_changed', function () {
 		console.log(ac);
 		var place = ac.getPlace();
@@ -18,10 +18,8 @@ var init = function () {
 		var lng = place.geometry.location.lng();
 		console.log(lat, lng, place);
 		getChartData(lat, lng);
-		saveToRecients(lat, lng);
+		saveToRecients(lat, lng, place.formatted_address);
 	});
-
-	$('#recientsSideNav').sideNav();
 };
 
 var getChartData = function (lat_in, lng_in) {
@@ -58,7 +56,7 @@ var createContainer = function (chart_id, fs) {
 		var col = $('<div>', { class: 'col-lg-12 col-xl-6 mt-3' }).appendTo('#chartConatiner');
 	}
 
-	var card = $('<div>', { class: 'card bg-dark' }).appendTo(col);
+	var card = $('<div>', { class: 'card ' }).appendTo(col);
 	var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
 	var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 };
@@ -116,13 +114,10 @@ var drawChart = function (chartData, container) {
 			'rgba(255, 159, 64, 0.2)'
 		],
 		borderColor     : [
-			'rgba(255, 255, 255)',
-			'rgba(255,99,132,1)',
-			'rgba(54, 162, 235, 1)',
-			'rgba(255, 206, 86, 1)',
-			'rgba(75, 192, 192, 1)',
-			'rgba(153, 102, 255, 1)',
-			'rgba(255, 159, 64, 1)'
+			"#247BA0",
+			"#FF1654",
+			"#70C1B3",
+			"#B2DBBF"
 		]
 	};
 	var chartOpts = {
@@ -135,29 +130,26 @@ var drawChart = function (chartData, container) {
 			responsive : true,
 			title      : {
 				display   : true,
-				text      : chartData.title,
-				fontColor : '#fff'
+				text      : chartData.title
 			},
 			scales     : {
 				xAxes : [
 					{
 						type      : 'time',
 						time      : {
-							displayFormats : {
-								millisecond : 'MM/DD',
-								second      : 'MM/DD',
-								minute      : 'MM/DD',
-								hour        : 'MM/DD',
-								day         : 'MM/DD',
-								week        : 'MM/DD',
-								month       : 'MM/DD',
-								quarter     : 'MM/DD',
-								year        : 'MM/DD'
+							unit: 'day',
+							displayFormats: {
+								second: 'h:MM:SS',
+								minute: 'h:MM',
+								hour: 'hA',
+								day: 'MMM D',
+								month: 'YYYY MMM',
+								year: 'YYYY',
 							}
 						},
-						fontColor : '#fff',
-						ticks     : {
-							fontColor : '#fff'
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
 						}
 					}
 				],
@@ -165,11 +157,10 @@ var drawChart = function (chartData, container) {
 					{
 						scaleLabel : {
 							display     : true,
-							labelString : chartData.axis_labels.yAxis,
-							fontColor   : '#fff'
+							labelString : chartData.axis_labels.yAxis
 						},
-						ticks      : {
-							fontColor : '#fff'
+						ticks: {
+							beginAtZero: true
 						}
 					}
 				]
@@ -183,7 +174,8 @@ var drawChart = function (chartData, container) {
 			data            : row,
 			borderWidth     : 3,
 			backgroundColor : 'transparent',
-			borderColor     : [ colorChoice.borderColor[i] ]
+			borderColor     : [ colorChoice.borderColor[i] ],
+			lineTension		: 0
 		};
 
 		chartOpts.data.datasets.push(rowData);
@@ -192,6 +184,39 @@ var drawChart = function (chartData, container) {
 	var myLineChart = new Chart(chartDiv, chartOpts);
 };
 
-var saveToRecients = function (lat, lon, place) {};
+var saveToRecients = function (lat, lon, place) {
+	var myLocations = (localStorage.getItem("climbingLocations") != null) ? JSON.parse(localStorage.getItem("climbingLocations")) : [];
+
+	 var isExists = myLocations.find(function(location, i){
+		if (location.place == place)return true;
+	})
+
+	console.log(isExists, myLocations);
+
+	if (!isExists){
+		myLocations.push({
+			lat: lat,
+			lon: lon,
+			place: place
+		})
+		localStorage.setItem('climbingLocations', JSON.stringify(myLocations));
+	}
+};
+
+var loadRecients = function(){
+	var myLocations = (localStorage.getItem("climbingLocations") != null) ? JSON.parse(localStorage.getItem("climbingLocations")) : [];
+
+	myLocations.forEach(function(location, i){
+		var fLat = location.lat,
+			fLon = location.lon,
+			fPlace = location.place;
+	
+		var favLink = $("<a>",{"text": fPlace, "data-lat": fLat, "data-lon": fLon}).appendTo("#favoritesConatiner");
+		favLink.on("click", function(){
+			getChartData(fLat, fLon);
+		})
+	})
+
+};
 
 $(document).ready(init);
