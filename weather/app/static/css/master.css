@@ -31,6 +31,9 @@ body {
 #titleContainer {
 	margin-top: 20px;
 }
+.pac-containe {
+	z-index: 1099 !important;
+}
 .custom-fixed {
 	position: fixed;
 	top: 0;
