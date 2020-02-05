@@ -1,24 +1,151 @@
 /*    
-#247BA0
-#70C1B3
-#B2DBBF
-#F3FFBD
-#FF1654
-*/
+#1C4E80
+#FFFFFF
+#EA6A47
+#A5D8DD
+#1599D8
+#D9DFE2
 
-#locationSearch::-webkit-input-placeholder {
+#333333
+#4E4E56
+*/
+html,
+body {
+	height: 100%;
+	background-color: #333333;
+}
+.cardTheme-title {
+	background-color: #272727 !important;
+	color: #fff !important;
+}
+.cardTheme-dark {
+	background-color: #4e4e56 !important;
+	color: #fff !important;
+}
+.navbar {
+	background-color: #fff;
+}
+/* #locationSearch::-webkit-input-placeholder {
 	color: #bbb;
+} */
+.fixed-top {
+	z-index: 999;
+}
+.custom-fixed {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
 }
 .chartsView {
 	margin-top: 75px;
 }
-.fixed-top {
-	position: fixed;
-	top: 0;
-	right: 0;
-	left: 0;
-	z-index: 999;
+.chartsView .custom-sidebar {
+	top: 83px;
+	padding: 0;
+	display: none;
 }
-.sticky-top {
-    top: 95px;
+.chartsView .custom-sidebar #favoritesConatiner a {
+	font-size: .8rem;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.chartsView .custom-sidebar #favoritesConatiner a:hover {
+	background-color: rgba(255, 255, 255, .3) !important;
+}
+.md-form input:not([type]):focus:not([readonly]),
+.md-form input[type="text"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="password"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="email"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="url"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="time"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="date"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="datetime"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="datetime-local"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="tel"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="number"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="search"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="search-md"]:focus:not([readonly]),
+.md-form textarea.md-textarea:focus:not([readonly]) {
+	border-bottom: 1px solid #1599d8;
+	-webkit-box-shadow: 0 1px 0 0 #1599d8;
+	box-shadow: 0 1px 0 0 #1599d8;
+}
+
+/*
+*
+* ==========================================
+* CUSTOM UTIL CLASSES
+* ==========================================
+*
+*/
+
+.progress {
+	width: 150px;
+	height: 150px;
+	background: none;
+	position: relative;
+}
+
+.progress::after {
+	content: "";
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	border: 6px solid #eee;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.progress > span {
+	width: 50%;
+	height: 100%;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+}
+
+.progress .progress-left {
+	left: 0;
+}
+
+.progress .progress-bar {
+	width: 100%;
+	height: 100%;
+	background: none;
+	border-width: 6px;
+	border-style: solid;
+	position: absolute;
+	top: 0;
+}
+
+.progress .progress-left .progress-bar {
+	left: 100%;
+	border-top-right-radius: 80px;
+	border-bottom-right-radius: 80px;
+	border-left: 0;
+	-webkit-transform-origin: center left;
+	transform-origin: center left;
+}
+
+.progress .progress-right {
+	right: 0;
+}
+
+.progress .progress-right .progress-bar {
+	left: -100%;
+	border-top-left-radius: 80px;
+	border-bottom-left-radius: 80px;
+	border-right: 0;
+	-webkit-transform-origin: center right;
+	transform-origin: center right;
+}
+
+.progress .progress-value {
+	position: absolute;
+	top: 0;
+	left: 0;
 }
