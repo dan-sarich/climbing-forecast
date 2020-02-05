@@ -28,8 +28,8 @@ body {
 /* #locationSearch::-webkit-input-placeholder {
 	color: #bbb;
 } */
-.fixed-top {
-	z-index: 999;
+#titleContainer {
+	margin-top: 20px;
 }
 .custom-fixed {
 	position: fixed;
@@ -46,13 +46,13 @@ body {
 	display: none;
 }
 .chartsView .custom-sidebar #favoritesConatiner a {
-	font-size: .8rem;
+	font-size: 0.8rem;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
 }
 .chartsView .custom-sidebar #favoritesConatiner a:hover {
-	background-color: rgba(255, 255, 255, .3) !important;
+	background-color: rgba(255, 255, 255, 0.3) !important;
 }
 .md-form input:not([type]):focus:not([readonly]),
 .md-form input[type="text"]:not(.browser-default):focus:not([readonly]),
@@ -62,7 +62,8 @@ body {
 .md-form input[type="time"]:not(.browser-default):focus:not([readonly]),
 .md-form input[type="date"]:not(.browser-default):focus:not([readonly]),
 .md-form input[type="datetime"]:not(.browser-default):focus:not([readonly]),
-.md-form input[type="datetime-local"]:not(.browser-default):focus:not([readonly]),
+.md-form
+	input[type="datetime-local"]:not(.browser-default):focus:not([readonly]),
 .md-form input[type="tel"]:not(.browser-default):focus:not([readonly]),
 .md-form input[type="number"]:not(.browser-default):focus:not([readonly]),
 .md-form input[type="search"]:not(.browser-default):focus:not([readonly]),
