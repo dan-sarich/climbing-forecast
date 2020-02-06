@@ -1,11 +1,11 @@
 /***********************************************
  * Google Charts: Line / Multi Line
- * Vue.js Build Templates for each type of table. 
+ * Vue.js Build Templates for each type of table.
  * - Pass in X & Y Axis labels and value arrays
- * 
+ *
  * https://bootstrapious.com/p/circular-progress-bar
-************************************************/
-var init = function () {
+ ************************************************/
+var init = function() {
 	google.charts.load('current', { packages: [ 'line' ] });
 
 	var ac = new google.maps.places.Autocomplete(document.getElementById('locationSearch'), {
@@ -15,46 +15,51 @@ var init = function () {
 
 	loadRecients();
 
-	google.maps.event.addListener(ac, 'place_changed', function () {
+	google.maps.event.addListener(ac, 'place_changed', function() {
 		console.log(ac);
 		var place = ac.getPlace();
 		var lat = place.geometry.location.lat();
 		var lng = place.geometry.location.lng();
 
-		getChartData(lat, lng, place.name);
+		getChartData(lat, lng, place.name, place.formatted_address);
 	});
 };
 
-var getChartData = function (lat_in, lng_in, name) {
+var getChartData = function(lat_in, lng_in, name, formatted_address) {
 	$.ajax({
 		type        : 'POST',
 		contentType : 'application/json',
 		data        : JSON.stringify({ lat: lat_in, lng: lng_in }),
 		url         : '/data',
-		success     : function (result) {
+		success     : function(result) {
+			console.log('result', lat_in, lng_in, name, formatted_address);
 			createTitleArea(name);
 			formatChartData(result);
-			saveToRecients(lat_in, lng_in, name);
+			saveToRecients(lat_in, lng_in, name, formatted_address);
 		},
-		error       : function (err) {
+		error       : function(err) {
 			console.error(err);
 		}
 	});
 };
-var createTitleArea = function (name) {
+
+var createTitleArea = function(name) {
 	$('#titleContainer').empty();
 	var col = $('<div>', { class: 'col-12 ' }).prependTo('#titleContainer');
 	var heading = $('<h1>', { text: name, class: 'text-white' }).prependTo(col);
 };
-var formatChartData = function (chartData) {
+var formatChartData = function(chartData) {
 	$('#chartConatiner').empty();
+	console.log(chartData);
 	for (key in chartData.chart_pairing) {
-		chartData.chart_pairing[key].labels.forEach(function (time, i) {
+		// Loop through and format as date
+		chartData.chart_pairing[key].labels.forEach(function(time, i) {
 			chartData.chart_pairing[key].labels[i] = new Date(time);
 		});
 
-		chartData.chart_pairing[key].rows.forEach(function (rows, i) {
-			rows.forEach(function (row, j) {
+		// Loop through rows and format numbers
+		chartData.chart_pairing[key].rows.forEach(function(rows, i) {
+			rows.forEach(function(row, j) {
 				rows[j] = row.toFixed(2);
 			});
 		});
@@ -64,7 +69,7 @@ var formatChartData = function (chartData) {
 	}
 };
 
-var createContainer = function (chart_id, fs) {
+var createContainer = function(chart_id, fs) {
 	if (fs) {
 		var col = $('<div>', { class: 'col-lg-12 col-xl-12 mt-3' }).prependTo('#chartConatiner');
 	} else {
@@ -76,7 +81,7 @@ var createContainer = function (chart_id, fs) {
 	var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 };
 
-var drawChart = function (chartData, container) {
+var drawChart = function(chartData, container) {
 	var myChartData = [];
 	var chartDiv = document.getElementById(container).getContext('2d');
 	var colorChoice = {
@@ -145,7 +150,7 @@ var drawChart = function (chartData, container) {
 		}
 	};
 
-	chartData.rows.forEach(function (row, i) {
+	chartData.rows.forEach(function(row, i) {
 		var rowData = {
 			label           : chartData.dataSet_labels[i],
 			data            : row,
@@ -161,7 +166,7 @@ var drawChart = function (chartData, container) {
 	if (chartData.format == 'percent') {
 		chartOpts.options.scales.yAxes[0].ticks['min'] = 0;
 		chartOpts.options.scales.yAxes[0].ticks['max'] = 100;
-		chartOpts.options.scales.yAxes[0].ticks['callback'] = function (value) {
+		chartOpts.options.scales.yAxes[0].ticks['callback'] = function(value) {
 			return value + '%';
 		};
 	}
@@ -169,16 +174,17 @@ var drawChart = function (chartData, container) {
 	var myLineChart = new Chart(chartDiv, chartOpts);
 };
 
-var saveToRecients = function (lat, lon, name) {
+var saveToRecients = function(lat, lon, name, address) {
 	var myLocations = localStorage.getItem('climbingLocations') != null ? JSON.parse(localStorage.getItem('climbingLocations')) : [];
 	var locationObj = {
-		lat  : lat,
-		lon  : lon,
-		name : name
+		lat     : lat,
+		lon     : lon,
+		name    : name,
+		address : address
 	};
 
-	var foundObj = myLocations.find(function (loc, i) {
-		if (loc.name == name) return loc;
+	var foundObj = myLocations.find(function(loc, i) {
+		if (loc.address == address) return loc;
 	});
 	var isExists = myLocations.indexOf(foundObj);
 
@@ -188,39 +194,40 @@ var saveToRecients = function (lat, lon, name) {
 		myLocations.splice(isExists, 1);
 		myLocations.unshift(foundObj);
 	}
-	console.log(myLocations);
+
 	localStorage.setItem('climbingLocations', JSON.stringify(myLocations));
 	loadRecients();
 };
 
-var loadRecients = function () {
+var loadRecients = function() {
 	var myLocations = localStorage.getItem('climbingLocations') != null ? JSON.parse(localStorage.getItem('climbingLocations')) : [];
 
 	$('#favoritesConatiner').empty();
 	if (myLocations.length) $('.custom-sidebar').show();
-	myLocations.forEach(function (location, i) {
+	myLocations.forEach(function(loc, i) {
 		// only show 6 recients
 		if (i < 6) {
-			var fLat = location.lat,
-				fLon = location.lon,
-				fName = location.name;
+			var fLat = loc.lat,
+				fLon = loc.lon,
+				fName = loc.name,
+				fAddress = loc.address;
 
 			var favLink = $('<a>', {
 				class      : 'list-group-item list-group-item-action d-flex justify-content-between align-items-center cardTheme-dark',
-				text       : fName,
+				text       : fAddress,
 				'data-lat' : fLat,
 				'data-lon' : fLon
 			}).appendTo('#favoritesConatiner');
 
-			favLink.on('click', function () {
+			favLink.on('click', function() {
 				$('#locationSearch').val('');
-				getChartData(fLat, fLon, fName);
+				getChartData(fLat, fLon, fName, fAddress);
 			});
 		}
 	});
 };
-var initProgressView = function () {
-	$('.progress').each(function () {
+var initProgressView = function() {
+	$('.progress').each(function() {
 		var value = $(this).attr('data-value');
 		var left = $(this).find('.progress-left .progress-bar');
 		var right = $(this).find('.progress-right .progress-bar');
@@ -235,7 +242,7 @@ var initProgressView = function () {
 		}
 	});
 };
-var percentageToDegrees = function (percentage) {
+var percentageToDegrees = function(percentage) {
 	return percentage / 100 * 360;
 };
 

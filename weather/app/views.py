@@ -221,118 +221,118 @@ def getconditions():
             100*(IT_shade_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
         i = i+1
 
-        resp_json = {
-            "time": time,
-            "timemonth": timemonth,
-            "timeday": timeday,
-            "timehr": timehr,
-            "status": status,
-            "chart_pairing": {
-                "rain_chart": {
-                    "rows": [rain_act],
-                    "dataSet_labels": ["Accumulation (mm)"],
-                    "labels": time,
-                    "axis_labels": {
-                        "yAxis": "Accumulation (mm)",
-                        "xAxis": ""
-                    },
-                    "title": "Rain Accumulation",
-                    "format": "",
-                    "show_legend": "none",
-                    "fullScreen": False
+    resp_json = {
+        "time": time,
+        "timemonth": timemonth,
+        "timeday": timeday,
+        "timehr": timehr,
+        "status": status,
+        "chart_pairing": {
+            "rain_chart": {
+                "rows": [rain_act],
+                "dataSet_labels": ["Accumulation (mm)"],
+                "labels": time,
+                "axis_labels": {
+                    "yAxis": "Accumulation (mm)",
+                    "xAxis": ""
                 },
-                "snow_chart": {
-                    "rows": [snow_act],
-                    "dataSet_labels": ["Accumulation (mm)"],
-                    "labels": time,
-                    "axis_labels": {
-                        "yAxis": "Accumulation (mm)",
-                        "xAxis": ""
-                    },
-                    "title": "Snow Accumulation",
-                    "format": "",
-                    "show_legend": "none",
-                    "fullScreen": False
+                "title": "Rain Accumulation",
+                "format": "",
+                "show_legend": "none",
+                "fullScreen": False
+            },
+            "snow_chart": {
+                "rows": [snow_act],
+                "dataSet_labels": ["Accumulation (mm)"],
+                "labels": time,
+                "axis_labels": {
+                    "yAxis": "Accumulation (mm)",
+                    "xAxis": ""
                 },
-                "cloudiness_chart": {
-                    "rows": [cloudiness],
-                    "dataSet_labels": ["Cloudiness (%)"],
-                    "labels": time,
-                    "axis_labels": {
-                        "yAxis": "Cloudiness (%)",
-                        "xAxis": ""
-                    },
-                    "title": "Cloudiness",
-                    "format": "percent",
-                    "show_legend": "none",
-                    "fullScreen": False
+                "title": "Snow Accumulation",
+                "format": "",
+                "show_legend": "none",
+                "fullScreen": False
+            },
+            "cloudiness_chart": {
+                "rows": [cloudiness],
+                "dataSet_labels": ["Cloudiness (%)"],
+                "labels": time,
+                "axis_labels": {
+                    "yAxis": "Cloudiness (%)",
+                    "xAxis": ""
                 },
-                "humidity_chart": {
-                    "rows": [humidity_act],
-                    "dataSet_labels": ["Humidity (%)"],
-                    "labels": time,
-                    "title": "Humidity",
-                    "axis_labels": {
-                        "yAxis": "Humidity (%)",
-                        "xAxis": ""
-                    },
-                    "format": "percent",
-                    "show_legend": "none",
-                    "fullScreen": False
+                "title": "Cloudiness",
+                "format": "percent",
+                "show_legend": "none",
+                "fullScreen": False
+            },
+            "humidity_chart": {
+                "rows": [humidity_act],
+                "dataSet_labels": ["Humidity (%)"],
+                "labels": time,
+                "title": "Humidity",
+                "axis_labels": {
+                    "yAxis": "Humidity (%)",
+                    "xAxis": ""
                 },
-                "wind_chart": {
-                    "rows": [wind_act],
-                    "dataSet_labels": ["Wind (km/h)"],
-                    "labels": time,
-                    "title": "Wind",
-                    "axis_labels": {
-                        "yAxis": "Wind (km/h)",
-                        "xAxis": ""
-                    },
-                    "format": "",
-                    "show_legend": "none",
-                    "fullScreen": False
+                "format": "percent",
+                "show_legend": "none",
+                "fullScreen": False
+            },
+            "wind_chart": {
+                "rows": [wind_act],
+                "dataSet_labels": ["Wind (km/h)"],
+                "labels": time,
+                "title": "Wind",
+                "axis_labels": {
+                    "yAxis": "Wind (km/h)",
+                    "xAxis": ""
                 },
-                "temperature_chart": {
-                    "rows": [temperature_act],
-                    "dataSet_labels": ["Temperature (C)"],
-                    "labels": time,
-                    "title": "Temperature",
-                    "format": "",
-                    "axis_labels": {
-                        "yAxis": "Temperature (C)",
-                        "xAxis": ""
-                    },
-                    "show_legend": "none",
-                    "fullScreen": False
+                "format": "",
+                "show_legend": "none",
+                "fullScreen": False
+            },
+            "temperature_chart": {
+                "rows": [temperature_act],
+                "dataSet_labels": ["Temperature (C)"],
+                "labels": time,
+                "title": "Temperature",
+                "format": "",
+                "axis_labels": {
+                    "yAxis": "Temperature (C)",
+                    "xAxis": ""
                 },
-                "fun_chart": {
-                    "rows": [P_sun, P_shadow],
-                    "dataSet_labels": ["In Sun", "In Shade"],
-                    "labels": time,
-                    "title": "Climbing Fun",
-                    "format": "percent",
-                    "axis_labels": {
-                        "yAxis": "Climbing Fun (%)",
-                        "xAxis": ""
-                    },
-                    "show_legend": "",
-                    "fullScreen": True
+                "show_legend": "none",
+                "fullScreen": False
+            },
+            "fun_chart": {
+                "rows": [P_sun, P_shadow],
+                "dataSet_labels": ["In Sun", "In Shade"],
+                "labels": time,
+                "title": "Climbing Fun",
+                "format": "percent",
+                "axis_labels": {
+                    "yAxis": "Climbing Fun (%)",
+                    "xAxis": ""
                 },
-                "temperature_felt_chart": {
-                    "rows": [Tsun_felt, Tshade_felt],
-                    "dataSet_labels": ["Temp in Sun", "Temp in Shade"],
-                    "labels": time,
-                    "title": "Temperature Felt",
-                    "format": "",
-                    "axis_labels": {
-                        "yAxis": "Temperature Felt (C)",
-                        "xAxis": ""
-                    },
-                    "show_legend": "",
-                    "fullScreen": True
-                }
+                "show_legend": "",
+                "fullScreen": True
+            },
+            "temperature_felt_chart": {
+                "rows": [Tsun_felt, Tshade_felt],
+                "dataSet_labels": ["Temp in Sun", "Temp in Shade"],
+                "labels": time,
+                "title": "Temperature Felt",
+                "format": "",
+                "axis_labels": {
+                    "yAxis": "Temperature Felt (C)",
+                    "xAxis": ""
+                },
+                "show_legend": "",
+                "fullScreen": True
             }
         }
+    }
 
     return resp_json
