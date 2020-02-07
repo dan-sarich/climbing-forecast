@@ -10,17 +10,16 @@ var init = function() {
 
 	var ac = new google.maps.places.Autocomplete(document.getElementById('locationSearch'), {
 		types  : [ 'geocode' ],
-		fields : [ 'formatted_address', 'geometry.location', 'icon', 'photos', 'name' ]
+		fields : [ 'formatted_address', 'geometry.location', 'icon', 'photos', 'name', 'utc_offset' ]
 	});
 
 	loadRecients();
 
 	google.maps.event.addListener(ac, 'place_changed', function() {
-		console.log(ac);
 		var place = ac.getPlace();
 		var lat = place.geometry.location.lat();
 		var lng = place.geometry.location.lng();
-
+		console.log(place);
 		getChartData(lat, lng, place.name, place.formatted_address);
 	});
 };
@@ -54,7 +53,8 @@ var formatChartData = function(chartData) {
 	for (key in chartData.chart_pairing) {
 		// Loop through and format as date
 		chartData.chart_pairing[key].labels.forEach(function(time, i) {
-			chartData.chart_pairing[key].labels[i] = new Date(time);
+			var md = moment.tz(time, chartData.timezone).format('MMM DD h:mm A');
+			chartData.chart_pairing[key].labels[i] = md;
 		});
 
 		// Loop through rows and format numbers
@@ -113,7 +113,6 @@ var drawChart = function(chartData, container) {
 						type       : 'time',
 						time       : {
 							unit           : 'day',
-							tooltipFormat  : 'MMM DD h:MM A',
 							displayFormats : {
 								second : 'h:MM:SS',
 								minute : 'h:MM',

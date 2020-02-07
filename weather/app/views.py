@@ -226,6 +226,7 @@ def getconditions():
         "timemonth": timemonth,
         "timeday": timeday,
         "timehr": timehr,
+        "timezone": Timezone,
         "status": status,
         "chart_pairing": {
             "rain_chart": {
