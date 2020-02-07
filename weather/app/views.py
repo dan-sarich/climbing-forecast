@@ -79,7 +79,7 @@ def getconditions():
     # get the wheather
     API_key = app.config['OWM_API_KEY']
     owm = OWM(API_key)
-    fc = owm.three_hours_forecast_at_coords(int(lat), int(lng))
+    fc = owm.three_hours_forecast_at_coords(float(lat), float(lng))
     f = fc.get_forecast()
     # Calculations alculating probability
     time = []
