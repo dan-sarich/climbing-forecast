@@ -321,7 +321,7 @@ def getconditions():
                 "fullScreen": True
             },
             "temperature_felt_chart": {
-                "rows": [Tsun_felt, Tshade_felt],
+                "rows": [Tsun_felt, Tshade_felt, temperature_act],
                 "dataSet_labels": ["Temp in Sun", "Temp in Shade"],
                 "labels": time,
                 "title": "Temperature Felt",
