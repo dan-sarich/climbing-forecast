@@ -49,6 +49,7 @@ var createTitleArea = function(name) {
 };
 var formatChartData = function(chartData) {
 	$('#chartConatiner').empty();
+	$('#fsChartConatiner').empty();
 	console.log(chartData);
 	for (key in chartData.chart_pairing) {
 		// Loop through and format as date
@@ -71,22 +72,23 @@ var formatChartData = function(chartData) {
 
 var createContainer = function(chart_id, fs) {
 	if (fs) {
-		var col = $('<div>', { class: 'col-lg-12 col-xl-12 mt-3' }).prependTo('#chartConatiner');
+		var col = $('<div>', { class: 'col-lg-12 col-xl-12 mt-3' }).appendTo('#fsChartConatiner');
+		var card = $('<div>', { class: 'card cardTheme-dark' }).appendTo(col);
+		var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
+		var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 	} else {
 		var col = $('<div>', { class: 'col-lg-12 col-xl-6 mt-3' }).appendTo('#chartConatiner');
+		var card = $('<div>', { class: 'card cardTheme-dark' }).appendTo(col);
+		var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
+		var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 	}
-
-	var card = $('<div>', { class: 'card cardTheme-dark' }).appendTo(col);
-	var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
-	var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 };
 
 var drawChart = function(chartData, container) {
 	var myChartData = [];
 	var chartDiv = document.getElementById(container).getContext('2d');
 	var colorChoice = {
-		borderColor     : [ '#EA6A47', '#A5D8DD', '#1599D8', '#D9DFE2' ],
-		backgroundColor : [ '#EA6A4740', '#A5D8D40D', '#1599D840', '#D9DFE240' ]
+		borderColor : [ '#EA6A47', '#1599D8', '#66ab79' ]
 	};
 	var chartOpts = {
 		type    : 'line',

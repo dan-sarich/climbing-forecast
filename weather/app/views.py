@@ -294,18 +294,18 @@ def getconditions():
                 "show_legend": "none",
                 "fullScreen": False
             },
-            "temperature_chart": {
-                "rows": [temperature_act],
-                "dataSet_labels": ["Temperature (C)"],
+            "temperature_felt_chart": {
+                "rows": [Tsun_felt, Tshade_felt, temperature_act],
+                "dataSet_labels": ["Temp in Sun", "Temp in Shade", "Measured Temp"],
                 "labels": time,
-                "title": "Temperature",
+                "title": "Temperature Felt",
                 "format": "",
                 "axis_labels": {
-                    "yAxis": "Temperature (C)",
+                    "yAxis": "Temperature Felt (C)",
                     "xAxis": ""
                 },
-                "show_legend": "none",
-                "fullScreen": False
+                "show_legend": "",
+                "fullScreen": True
             },
             "fun_chart": {
                 "rows": [P_sun, P_shadow],
@@ -315,19 +315,6 @@ def getconditions():
                 "format": "percent",
                 "axis_labels": {
                     "yAxis": "Climbing Fun (%)",
-                    "xAxis": ""
-                },
-                "show_legend": "",
-                "fullScreen": True
-            },
-            "temperature_felt_chart": {
-                "rows": [Tsun_felt, Tshade_felt, temperature_act],
-                "dataSet_labels": ["Temp in Sun", "Temp in Shade"],
-                "labels": time,
-                "title": "Temperature Felt",
-                "format": "",
-                "axis_labels": {
-                    "yAxis": "Temperature Felt (C)",
                     "xAxis": ""
                 },
                 "show_legend": "",
