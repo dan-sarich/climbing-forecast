@@ -198,7 +198,7 @@ def getconditions():
                 LSnowProb.append(special.erfc(
                     (dsnow-Rcut_light)*2.35482/Rwid_light)/2)
             if snow_act[j] >= 7.5 and snow_act[j] < 30:
-                drain = (j-i)*3
+                dsnow = (j-i)*3
                 LSnowProb.append(special.erfc(
                     (dsnow-Rcut_moderate)*2.35482/Rwid_moderate)/2)
             if snow_act[j] >= 30 and snow_act[j] < 150:
