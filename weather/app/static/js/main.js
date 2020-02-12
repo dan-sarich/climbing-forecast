@@ -54,7 +54,7 @@ var formatChartData = function(chartData) {
 	for (key in chartData.chart_pairing) {
 		// Loop through and format as date
 		chartData.chart_pairing[key].labels.forEach(function(time, i) {
-			var md = moment.tz(time, chartData.timezone).format('MMM DD h:mm A');
+			var md = moment(time).tz(chartData.timezone).format('MMM DD h:mm A');
 			chartData.chart_pairing[key].labels[i] = md;
 		});
 
@@ -69,7 +69,21 @@ var formatChartData = function(chartData) {
 		drawChart(chartData.chart_pairing[key], key);
 	}
 };
+function addData(chart, label, data) {
+	chart.data.labels.push(label);
+	chart.data.datasets.forEach((dataset) => {
+		dataset.data.push(data);
+	});
+	chart.update();
+}
 
+function removeData(chart) {
+	chart.data.labels.pop();
+	chart.data.datasets.forEach((dataset) => {
+		dataset.data.pop();
+	});
+	chart.update();
+}
 var createContainer = function(chart_id, fs) {
 	if (fs) {
 		var col = $('<div>', { class: 'col-lg-12 col-xl-12 mt-3' }).appendTo('#fsChartConatiner');
@@ -172,7 +186,7 @@ var drawChart = function(chartData, container) {
 		};
 	}
 
-	var myLineChart = new Chart(chartDiv, chartOpts);
+	document[container] = new Chart(chartDiv, chartOpts);
 };
 
 var saveToRecients = function(lat, lon, name, address) {

@@ -17,7 +17,7 @@ import json
 @app.route("/")
 def index():
     PLACES_API_key = app.config['PLACES_API']
-    return render_template('index.html', apiKey=PLACES_API_key)
+    return render_template('index.html', apiKey=PLACES_API_key, now=datetime.now().strftime('%s'))
 
 # This python function requires the coordinates of a place in lat and lon and returns: time, month, day, hour, whetherstatus, actual temperature, temp felt in sun, temp felt in shade,cloudiness,wind_act,humidity_act,rain_act,Probability fun in sun and shade
 @app.route('/data', methods=['POST'])
