@@ -22,6 +22,12 @@ var init = function() {
 		console.log(place);
 		getChartData(lat, lng, place.name, place.formatted_address);
 	});
+
+	$('#sidebarCollapse').on('click', function() {
+		$('#sidebar').toggleClass('active');
+		$('.navbar').toggleClass('active');
+		$('#content').toggleClass('active');
+	});
 };
 
 var getChartData = function(lat_in, lng_in, name, formatted_address) {
@@ -50,40 +56,35 @@ var createTitleArea = function(name) {
 var formatChartData = function(chartData) {
 	$('#chartConatiner').empty();
 	$('#fsChartConatiner').empty();
-	console.log(chartData);
+
 	for (key in chartData.chart_pairing) {
 		// Loop through and format as date
-		chartData.chart_pairing[key].labels.forEach(function(time, i) {
-			var md = moment(time).tz(chartData.timezone).format('MMM DD h:mm A');
-			chartData.chart_pairing[key].labels[i] = md;
-		});
+		chartData.chart_pairing[key].labelChunks = {};
+		chartData.chart_pairing[key].dataChunks = [];
 
-		// Loop through rows and format numbers
-		chartData.chart_pairing[key].rows.forEach(function(rows, i) {
-			rows.forEach(function(row, j) {
-				rows[j] = row.toFixed(2);
+		chartData.chart_pairing[key].labels.forEach(function(time, i) {
+			var tz = moment(time).tz(chartData.timezone);
+			chartData.chart_pairing[key].labels[i] = tz.format('MMM DD h:mm A');
+
+			var t = tz.format('ddd');
+			if (typeof chartData.chart_pairing[key].labelChunks[t] == 'undefined') chartData.chart_pairing[key].labelChunks[t] = [];
+			chartData.chart_pairing[key].labelChunks[t].push(tz.format('h:mm A'));
+
+			// Loop through rows and format numbers
+			chartData.chart_pairing[key].rows.forEach(function(rows, x) {
+				if (typeof chartData.chart_pairing[key].dataChunks[x] == 'undefined') chartData.chart_pairing[key].dataChunks[x] = {};
+
+				rows[i] = rows[i].toFixed(2);
+				if (typeof chartData.chart_pairing[key].dataChunks[x][t] == 'undefined') chartData.chart_pairing[key].dataChunks[x][t] = [];
+				chartData.chart_pairing[key].dataChunks[x][t].push(rows[i]);
 			});
 		});
 
 		createContainer(key, chartData.chart_pairing[key].fullScreen);
 		drawChart(chartData.chart_pairing[key], key);
 	}
+	console.log(chartData);
 };
-function addData(chart, label, data) {
-	chart.data.labels.push(label);
-	chart.data.datasets.forEach((dataset) => {
-		dataset.data.push(data);
-	});
-	chart.update();
-}
-
-function removeData(chart) {
-	chart.data.labels.pop();
-	chart.data.datasets.forEach((dataset) => {
-		dataset.data.pop();
-	});
-	chart.update();
-}
 var createContainer = function(chart_id, fs) {
 	if (fs) {
 		var col = $('<div>', { class: 'col-lg-12 col-xl-12 mt-3' }).appendTo('#fsChartConatiner');
@@ -226,13 +227,13 @@ var loadRecients = function() {
 				fLon = loc.lon,
 				fName = loc.name,
 				fAddress = loc.address;
-
+			var listItem = $('<li>').appendTo('#favoritesConatiner');
 			var favLink = $('<a>', {
-				class      : 'list-group-item list-group-item-action d-flex justify-content-between align-items-center cardTheme-dark',
+				class      : '',
 				text       : fAddress,
 				'data-lat' : fLat,
 				'data-lon' : fLon
-			}).appendTo('#favoritesConatiner');
+			}).appendTo(listItem);
 
 			favLink.on('click', function() {
 				$('#locationSearch').val('');
@@ -240,25 +241,6 @@ var loadRecients = function() {
 			});
 		}
 	});
-};
-var initProgressView = function() {
-	$('.progress').each(function() {
-		var value = $(this).attr('data-value');
-		var left = $(this).find('.progress-left .progress-bar');
-		var right = $(this).find('.progress-right .progress-bar');
-
-		if (value > 0) {
-			if (value <= 50) {
-				right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)');
-			} else {
-				right.css('transform', 'rotate(180deg)');
-				left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)');
-			}
-		}
-	});
-};
-var percentageToDegrees = function(percentage) {
-	return percentage / 100 * 360;
 };
 
 $(document).ready(init);
