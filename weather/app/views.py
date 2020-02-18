@@ -29,6 +29,7 @@ def getconditions():
     print(data)  # parse as JSON
     lat = data['lat']
     lng = data['lng']
+    imperial = data['imperial']
 
     # setting optimal conditions
     #Temperature in C
@@ -219,6 +220,13 @@ def getconditions():
         P_sun.append(100*(IT_sun_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
         P_shadow.append(
             100*(IT_shade_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
+        if imperial==True:
+            temperature_act[i]=9/5*temperature_act[i]+32
+            Tsun_felt[i]=9/5*Tsun_felt[i]+32
+            Tshade_felt[i]=9/5*Tshade_felt[i]+32
+            wind_act[i]=wind_act[i]/1.609344
+            rain_act[i]=rain_act[i]/25.4
+            snow_act[i]=snow_act[i]/25.4
         i = i+1
 
     resp_json = {
