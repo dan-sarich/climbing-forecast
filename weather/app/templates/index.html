@@ -6,6 +6,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -15,40 +16,39 @@
   <link rel="stylesheet" href="/static/css/master.css?v={{now}}">
 </head>
 
-<body>
+<body class="dark-mode">
+  <!-- darkMode -->
   <div class="wrapper">
-      <!-- Sidebar -->
-      <nav id="sidebar">
-          <div class="sidebar-header">
-              <h3><a href="/" class="navbar-brand"><i class="fas fa-mountain"></i></a></h3>
-          </div>
-          <ul class="list-unstyled components">
-              <h5>Recent Searches</h5>
-              <hr>
-              <div id="favoritesConatiner"></div>
-          </ul>
-      </nav>
-      <!-- Page Content -->
-      <div id="content">
-        <nav class="navbar bg-dark navbar-dark fixed-top navbar-expand-lg">
-          <div class="d-flex flex-grow-1">
-            <a id="sidebarCollapse" class=""><i class="fas fa-bars"></i></a>
-            <div class="m-auto searchContainer d-inline-block order-1 md-form">
-              <input id="locationSearch" type="text" class="form-control text-light"/>
-            </div>
-          </div>
-        </nav>
-        <div class="container-fluid chartsView h-100 d-none d-sm-block">
-          <div class="row" id="titleContainer"></div>
-          <div class="row" id="fsChartConatiner"></div>
-          <div class="row" id="chartConatiner"></div>
-        </div>
-        <div class="container-fluid chartsViewMobile h-100 d-block d-sm-none">
-          <h1>Mobile Design</h1>
-          <div class="row" id="titleContainerMobile"></div>
-          <div class="row" id="chartConatinerMobile"></div>
-        </div>
+    <!-- Sidebar -->
+    <nav id="sidebar" class=" text-white bg-dark">
+      <div class="sidebar-header text-center">
+        <a href="/" class="navbar-brand"><img class="logo" src="/static/images/logo_white.png"></a>
       </div>
+      <ul class="list-unstyled components ">
+        <p class="listHeader text-center">Recent Searches</p>
+        <div id="favoritesConatiner"></div>
+      </ul>
+    </nav>
+    <!-- Page Content -->
+    <div id="content">
+      <nav class="navbar navbar-dark bg-dark fixed-top navbar-expand-lg">
+        <div class="d-flex flex-grow-1">
+          <a id="sidebarCollapse" class="text-light"><i class="fas fa-bars"></i></a>
+          <div class="m-auto searchContainer d-inline-block order-1 md-form">
+            <input id="locationSearch" type="text" class="form-control" />
+          </div>
+        </div>
+      </nav>
+      <div class="container-fluid chartsView h-100 d-none d-sm-block">
+        <div id="titleContainer"></div>
+        <div class="row" id="fsChartConatiner"></div>
+        <div class="row" id="chartConatiner"></div>
+      </div>
+      <div class="container-fluid chartsViewMobile h-100 d-block d-sm-none">
+        <div class="row" id="titleContainerMobile"></div>
+        <div class="row" id="chartConatinerMobile"></div>
+      </div>
+    </div>
   </div>
   <script type="text/javascript"
     src="https://maps.google.com/maps/api/js?v=3.exp&libraries=places&key={{apiKey}}"></script>

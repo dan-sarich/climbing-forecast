@@ -1,0 +1,343 @@
+$color-background-light: #e0e0e0;
+$color-background-dark: #333;
+$color-card-dark: #ffffff11;
+$color-card-light: #00000001;
+$color-text-dark: #fff;
+$color-text-light: darken($color-background-dark, 10%);
+$color-primary-light: #c5d1eb;
+$color-primary-med: #8697ba;
+$color-primary-dark: #37548e;
+$color-secondary-dark: #ff723f;
+
+body {
+	&.light-mode {
+		background-color: $color-background-light;
+
+		#sidebarCollapse {
+			color: $color-primary-dark;
+		}
+		.pac-container {
+			background-color: $color-text-dark;
+		}
+		.pac-item {
+			color: $color-text-light;
+		}
+		.pac-item-query {
+			color: $color-text-light;
+
+			.pac-matched {
+				color: $color-secondary-dark;
+			}
+		}
+		#locationSearch {
+			color: $color-text-light;
+		}
+		.chartsView .card,
+		.chartsViewMobile .card {
+			background-color: $color-card-light;
+
+			.card-title {
+				color: $color-card-light;
+			}
+		}
+		ul.components {
+			p {
+				color: $color-text-dark;
+			}
+			li {
+				&.active > a {
+					color: $color-text-light;
+				}
+			}
+		}
+		.daysList {
+			.nav-item {
+				a {
+					color: $color-text-light;
+					&.active {
+						border-bottom: 2px solid $color-primary-dark;
+						color: $color-text-light;
+					}
+				}
+			}
+		}
+	}
+	&.dark-mode {
+		background-color: $color-background-dark;
+
+		#sidebarCollapse {
+			color: $color-text-light;
+		}
+		.pac-container {
+			background-color: #212121;
+		}
+		.pac-item {
+			color: $color-text-dark;
+		}
+		.pac-item-query {
+			color: $color-text-dark;
+
+			.pac-matched {
+				color: $color-secondary-dark;
+			}
+		}
+		#locationSearch {
+			color: $color-text-dark;
+		}
+		.chartsView .card,
+		.chartsViewMobile .card {
+			background-color: $color-card-dark;
+			.card-title {
+				color: $color-text-dark;
+			}
+		}
+		ul.components {
+			p {
+				color: $color-text-dark;
+			}
+			li {
+				&.active > a {
+					color: $color-text-dark;
+				}
+			}
+		}
+		.daysList {
+			.nav-item {
+				a {
+					color: $color-text-dark;
+					&.active {
+						border-bottom: 2px solid $color-primary-dark;
+						color: $color-text-dark;
+					}
+				}
+			}
+		}
+	}
+}
+
+html,
+body {
+	height: 100%;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 14px;
+}
+
+#content {
+	width: 100%;
+	min-height: 100vh;
+	transition: all 0.3s;
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	&.active {
+		width: calc(100% - 250px);
+	}
+}
+.navbar {
+	left: 0;
+	transition: all 0.3s;
+
+	&.active {
+		left: 250px;
+	}
+}
+#sidebarCollapse {
+	padding: 12px 5px;
+	margin-right: 15px;
+}
+#titleContainer,
+#titleContainerMobile {
+	margin-top: 20px;
+}
+.pac-container {
+	z-index: 1099 !important;
+}
+.custom-fixed {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+}
+.chartsView,
+.chartsViewMobile {
+	margin-top: 75px;
+}
+
+.chartsView {
+	.custom-sidebar {
+		top: 83px;
+		padding: 0;
+		display: none;
+
+		#favoritesConatiner a {
+			font-size: 0.8rem;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+
+			&:hover {
+				background-color: rgba(255, 255, 255, 0.3) !important;
+			}
+		}
+	}
+}
+
+.pac-item-selected {
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.3);
+	}
+}
+.pac-item {
+	border: none;
+	padding: 5px;
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.3);
+	}
+}
+.pac-icon {
+	display: none;
+}
+
+.pac-logo:after {
+	display: none;
+}
+
+.logo {
+	width: 80px;
+	height: auto;
+}
+
+/* Side Nav styles */
+.wrapper {
+	display: flex;
+	width: 100%;
+}
+
+#sidebar {
+	width: 250px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	z-index: 999;
+	transition: all 0.3s;
+	margin-left: -250px;
+	&.active {
+		margin-left: 0;
+	}
+	.listHeader {
+		font-size: 1.2em;
+		padding: 0px 5px;
+	}
+	.sidebar-header {
+		padding: 20px;
+	}
+	ul.components {
+		padding: 20px 0;
+
+		p {
+			padding: 10px;
+		}
+		li {
+			a {
+				padding: 6px 3px 6px 8px;
+				display: block;
+				border-bottom: 1px solid #676767;
+
+				&:first-child {
+					border-top: 1px solid #676767;
+				}
+				&:hover {
+					background-color: rgba(255, 255, 255, 0.2);
+				}
+			}
+		}
+	}
+}
+
+/* tab card styles */
+.nav-link {
+	padding: .5rem .8rem;
+}
+.daysList {
+	.nav-item {
+		a {
+			background: none;
+			border: none;
+
+			&.active {
+				border-bottom: 1px solid #fff;
+				background: none;
+			}
+		}
+	}
+	&.nav-tabs {
+		border-bottom: none;
+	}
+}
+
+.daysChart {
+	padding: 15px 5px;
+	min-height: 275px;
+}
+.card.card-image {
+	width: 100%;
+	background-position: center;
+	background-size: cover;
+}
+.card.card-image [class*="rgba-"] {
+	border-radius: .25rem;
+}
+.rgba-stylish-strong {
+	background-color: rgba(62, 69, 81, 0.7);
+}
+
+.md-form input:not([type]):focus:not([readonly]),
+.md-form input[type="text"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="password"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="email"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="url"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="time"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="date"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="datetime"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="datetime-local"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="tel"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="number"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="search"]:not(.browser-default):focus:not([readonly]),
+.md-form input[type="search-md"]:focus:not([readonly]),
+.md-form textarea.md-textarea:focus:not([readonly]) {
+	border-bottom: 1px solid $color-primary-dark;
+	-webkit-box-shadow: 0 1px 0 0 $color-primary-dark;
+	box-shadow: 0 1px 0 0 $color-primary-dark;
+}
+
+@media (max-width: 768px) {
+	#content {
+		width: 100%;
+		margin-left: 0;
+		margin-right: 0;
+	}
+	#content.active {
+		width: 100%;
+		margin-left: 250px;
+		margin-right: -250px;
+	}
+}
+@media (min-width: 576px) {
+	.navbar .searchContainer {
+		width: 50%;
+	}
+}
+@media (max-width: 576px) {
+	.navbar .searchContainer {
+		width: 100%;
+	}
+	.navbar .searchContainer input#locationSearch {
+		border-bottom: 0px solid transparent;
+	}
+	.pac-container {
+		width: 100% !important;
+		left: 0px !important;
+	}
+}
