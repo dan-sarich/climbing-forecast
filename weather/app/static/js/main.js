@@ -12,7 +12,7 @@ var init = function() {
 		var place = ac.getPlace();
 		var lat = place.geometry.location.lat();
 		var lng = place.geometry.location.lng();
-		var photoToUse = typeof place.photos != 'undefined' && place.photos.length ? place.photos[0].getUrl() : '';
+		var photoToUse = typeof place.photos != 'undefined' && place.photos.length ? place.photos[0].getUrl() : '/static/images/default_background.jpg';
 		console.log(place);
 		getChartData(lat, lng, place.name, place.formatted_address, photoToUse);
 	});
@@ -65,7 +65,7 @@ var createTitleArea = function(name, image) {
 	var card = $('<div>', { class: 'card card-image', style: 'background-image: url(' + image + ');' }).prependTo('#titleContainer');
 	var innerDiv = $('<div>', { class: 'text-white text-center rgba-stylish-strong py-5 px-4' }).appendTo(card);
 	var paddingDiv = $('<div>', { class: 'py-5' }).appendTo(innerDiv);
-	var heading = $('<h2>', { text: name, class: 'card-title h2 my-4 py-2' }).prependTo(paddingDiv);
+	var heading = $('<h1>', { text: name, class: 'card-title h1 my-4 py-2' }).prependTo(paddingDiv);
 };
 var formatChartData = function(chartData) {
 	$('#chartConatiner').empty();
@@ -171,7 +171,7 @@ var createContainer_mobile = function(chartData, chart_id) {
 var drawChart = function(chartData, container) {
 	var chartDiv = document.getElementById(container).getContext('2d');
 	var colorChoice = {
-		borderColor : [ '#EA6A47', '#1599D8', '#66ab79' ]
+		borderColor : [ '#ff723f', '#37548e', '#8697ba' ]
 	};
 	var chartOpts = {
 		type    : 'line',
