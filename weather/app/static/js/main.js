@@ -40,6 +40,11 @@ function newWeatherApp(params) {
 		$('#sidebarCollapse').on('click', function() {
 			_this.toggleSideBar();
 		});
+		$('#locationSearch').on('click', function() {
+			if (window.innerWidth <= 575) {
+				_this.toggleSideBar(false);
+			}
+		});
 		$('#metricToggle').on('click', function() {
 			var tm = setTimeout(function() {
 				var isMetric = $('#metricToggle').is('.active');
@@ -74,10 +79,6 @@ function newWeatherApp(params) {
 				_this.createTitleArea(_this.name, _this.image, '#titleContainerMobile');
 				_this.formatChartData(result);
 				_this.saveToRecients();
-
-				if (window.innerWidth <= 575) {
-					_this.toggleSideBar(false);
-				}
 				_this.loadingOverlayHide();
 			},
 			error       : function(err) {
@@ -222,42 +223,21 @@ function newWeatherApp(params) {
 			i++;
 		}
 	};
-	this.createDonutChart = function(chartData, container) {
+	this.createDonutChart = function(chartData, container, day) {
 		var _this = this;
-		var chartDiv = document.getElementById(container).getContext('2d');
+		var parentContainer = $('#' + container).parent();
+		$('#' + container).remove();
+		var singleWrapper = $('<div>', { class: 'text-center' }).appendTo(parentContainer);
 
-		var donutOpts = {
-			type    : 'doughnut', // Set the chart to be a doughnut chart type
-			data    : {
-				datasets : [
-					{
-						data        : [ chartData, 100 - percentValue ], // Set the value shown in the chart as a percentage (out of 100)
-						borderWidth : 0 // Width of border around the chart
-					}
-				]
-			},
-			options : {
-				cutoutPercentage : 84, // The percentage of the middle cut out of the chart
-				responsive       : false, // Set the chart to not be responsive
-				tooltips         : {
-					enabled : false // Hide tooltips
-				},
-				plugins          : {
-					colorschemes : {
-						scheme : 'tableau.NurielStone9'
-					}
-				}
-			}
-		};
-
-		document[container] = new Chart(chartCanvas, donutOpts);
+		$('<h2>', { class: 'singleWrapper_title', text: chartData.labels[0] }).appendTo(singleWrapper);
+		chartData.dataChunks.forEach(function(row, i) {
+			$('<p>', { class: 'card-category', text: chartData.dataSet_labels[i] }).appendTo(singleWrapper);
+			$('<h1>', { class: 'card-title', text: row[day][0] + chartData.format }).appendTo(singleWrapper);
+		});
 	};
 	this.drawChart = function(chartData, container) {
 		var _this = this;
 		var chartDiv = document.getElementById(container).getContext('2d');
-		// var colorChoice = {
-		// 	borderColor : [ '#ff723f', '#37548e', '#29b5a8' ]
-		// };
 		var chartOpts = {
 			type    : 'line',
 			data    : {
@@ -424,6 +404,8 @@ function newWeatherApp(params) {
 						}
 					},
 					tooltips   : {
+						mode              : 'interpolate',
+						intersect         : false,
 						titleMarginBottom : 10,
 						bodySpacing       : 10,
 						titleFontSize     : 14,
@@ -468,7 +450,8 @@ function newWeatherApp(params) {
 						yAxes : [
 							{
 								gridLines  : {
-									drawBorder : false
+									display : true,
+									color   : '#676767'
 								},
 								scaleLabel : {
 									display   : false,
@@ -503,11 +486,11 @@ function newWeatherApp(params) {
 					return value + '%';
 				};
 			}
-			console.log('isSinglePoint', isSinglePoint);
+
 			if (!isSinglePoint) {
 				document[container] = new Chart(chartDiv, chartOpts_MOBILE);
 			} else {
-				_this.createDonutChart(chartData, container);
+				_this.createDonutChart(chartData, container, day);
 			}
 		}
 	};
@@ -570,6 +553,10 @@ function newWeatherApp(params) {
 				favLink.on('click', function() {
 					$('#locationSearch').val('');
 					_this.getChartData(loc);
+
+					if (window.innerWidth <= 575) {
+						_this.toggleSideBar(false);
+					}
 				});
 			}
 		});

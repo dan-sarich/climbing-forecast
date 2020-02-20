@@ -103,6 +103,14 @@ body.dark-mode .navbar {
   background-color: #1e1e1e;
 }
 
+body.dark-mode .card-category {
+  color: #fff;
+}
+
+body.dark-mode .singleWrapper_title {
+  color: #29b5a8;
+}
+
 body.dark-mode ul.components p {
   color: #fff;
 }
