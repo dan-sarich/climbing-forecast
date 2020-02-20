@@ -49,6 +49,110 @@
       <!-- Desktop Chart View -->
       <div class="container-fluid chartsView h-100 d-none d-sm-block">
         <div id="titleContainer"></div>
+        <div id="atAGlance">
+        <div class="row">
+          <div class="col-lg-3 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body ">
+                      <div class="row">
+                          <div class="col-5">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="nc-icon nc-chart text-warning"></i>
+                              </div>
+                          </div>
+                          <div class="col-7">
+                              <div class="numbers">
+                                  <p class="card-category">Number</p>
+                                  <h4 class="card-title">150GB</h4>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer ">
+                      <hr>
+                      <div class="stats">
+                          <i class="fa fa-clock-o"></i> In the last hour
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body ">
+                      <div class="row">
+                          <div class="col-5">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="nc-icon nc-light-3 text-success"></i>
+                              </div>
+                          </div>
+                          <div class="col-7">
+                              <div class="numbers">
+                                  <p class="card-category">Revenue</p>
+                                  <h4 class="card-title">$ 1,345</h4>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer ">
+                      <hr>
+                      <div class="stats">
+                          <i class="fa fa-clock-o"></i> In the last hour
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body ">
+                      <div class="row">
+                          <div class="col-5">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="nc-icon nc-vector text-danger"></i>
+                              </div>
+                          </div>
+                          <div class="col-7">
+                              <div class="numbers">
+                                  <p class="card-category">Errors</p>
+                                  <h4 class="card-title">23</h4>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer ">
+                      <hr>
+                      <div class="stats">
+                          <i class="fa fa-clock-o"></i> In the last hour
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body ">
+                      <div class="row">
+                          <div class="col-5">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="nc-icon nc-favourite-28 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7">
+                              <div class="numbers">
+                                  <p class="card-category">Followers</p>
+                                  <h4 class="card-title">+45K</h4>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer ">
+                      <hr>
+                      <div class="stats">
+                          <i class="fa fa-clock-o"></i> In the last hour
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+        </div>
         <div class="row" id="fsChartConatiner"></div>
         <div class="row" id="chartConatiner"></div>
       </div>
@@ -71,6 +175,8 @@
   <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
   <script type="text/javascript" src="/static/mdb/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="/static/mdb/js/mdb.js"></script>
+  <script type="text/javascript" src="/static/js/chartjs-plugin-colorschemes.min.js"></script>
+  <script type="text/javascript" src="/static/js/chartjs-crosshair.js"></script>
   <script type="text/javascript" src="/static/js/main.js?v={{now}}"></script>
 </body>
 

@@ -107,6 +107,14 @@ function newWeatherApp(params) {
 		var paddingDiv = $('<div>', { class: 'py-5' }).appendTo(innerDiv);
 		var heading = $('<h1>', { text: name, class: 'card-title h1 my-4 py-2' }).prependTo(paddingDiv);
 	};
+	this.createAtAGlance = function(container) {
+		var _this = this;
+		$(container).empty();
+		var card = $('<div>', { class: 'card card-image', style: 'background-image: url(' + image + ');' }).prependTo(container);
+		var innerDiv = $('<div>', { class: 'text-white text-center rgba-stylish-strong p-2' }).appendTo(card);
+		var paddingDiv = $('<div>', { class: 'py-5' }).appendTo(innerDiv);
+		var heading = $('<h1>', { text: name, class: 'card-title h1 my-4 py-2' }).prependTo(paddingDiv);
+	};
 	this.formatChartData = function(chartData) {
 		var _this = this;
 		$('#chartConatiner').empty();
@@ -214,13 +222,42 @@ function newWeatherApp(params) {
 			i++;
 		}
 	};
+	this.createDonutChart = function(chartData, container) {
+		var _this = this;
+		var chartDiv = document.getElementById(container).getContext('2d');
 
+		var donutOpts = {
+			type    : 'doughnut', // Set the chart to be a doughnut chart type
+			data    : {
+				datasets : [
+					{
+						data        : [ chartData, 100 - percentValue ], // Set the value shown in the chart as a percentage (out of 100)
+						borderWidth : 0 // Width of border around the chart
+					}
+				]
+			},
+			options : {
+				cutoutPercentage : 84, // The percentage of the middle cut out of the chart
+				responsive       : false, // Set the chart to not be responsive
+				tooltips         : {
+					enabled : false // Hide tooltips
+				},
+				plugins          : {
+					colorschemes : {
+						scheme : 'tableau.NurielStone9'
+					}
+				}
+			}
+		};
+
+		document[container] = new Chart(chartCanvas, donutOpts);
+	};
 	this.drawChart = function(chartData, container) {
 		var _this = this;
 		var chartDiv = document.getElementById(container).getContext('2d');
-		var colorChoice = {
-			borderColor : [ '#ff723f', '#37548e', '#29b5a8' ]
-		};
+		// var colorChoice = {
+		// 	borderColor : [ '#ff723f', '#37548e', '#29b5a8' ]
+		// };
 		var chartOpts = {
 			type    : 'line',
 			data    : {
@@ -229,11 +266,32 @@ function newWeatherApp(params) {
 			},
 			options : {
 				responsive : true,
+				layout     : {
+					padding : {
+						left   : 0,
+						right  : 0,
+						top    : 0,
+						bottom : 0
+					}
+				},
 				title      : {
 					display   : false,
 					text      : chartData.title,
 					fontSize  : 24,
 					fontColor : '#fff'
+				},
+				plugins    : {
+					colorschemes : {
+						scheme : 'tableau.NurielStone9'
+					},
+					crosshair    : {
+						sync : {
+							enabled : false
+						},
+						zoom : {
+							enabled : false // enable zooming
+						}
+					}
 				},
 				legend     : {
 					labels : {
@@ -242,9 +300,14 @@ function newWeatherApp(params) {
 					}
 				},
 				tooltips   : {
-					callbacks : {
+					mode              : 'interpolate',
+					intersect         : false,
+					titleMarginBottom : 10,
+					bodySpacing       : 10,
+					titleFontSize     : 14,
+					callbacks         : {
 						label : function(tooltipItem, data) {
-							var label = ' ' + tooltipItem.yLabel + chartData.format;
+							var label = data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.yLabel + chartData.format;
 							return label;
 						}
 					}
@@ -259,17 +322,20 @@ function newWeatherApp(params) {
 									second : 'h:MM:SS',
 									minute : 'h:MM',
 									hour   : 'hA',
-									day    : 'MMM D',
+									day    : 'ddd D',
 									month  : 'YYYY MMM',
 									year   : 'YYYY'
 								}
 							},
 							scaleLabel : {
-								display   : true,
+								display   : false,
 								fontColor : '#fff'
 							},
 							ticks      : {
 								fontColor : '#fff'
+							},
+							gridLines  : {
+								display : false
 							}
 						}
 					],
@@ -283,6 +349,10 @@ function newWeatherApp(params) {
 							ticks      : {
 								beginAtZero : true,
 								fontColor   : '#fff'
+							},
+							gridLines  : {
+								display : true,
+								color   : '#676767'
 							}
 						}
 					]
@@ -292,13 +362,14 @@ function newWeatherApp(params) {
 
 		chartData.rows.forEach(function(row, i) {
 			var rowData = {
-				label           : chartData.dataSet_labels[i],
-				data            : row,
-				borderWidth     : 3,
-				backgroundColor : 'transparent',
-				pointHitRadius  : 10,
-				borderColor     : [ colorChoice.borderColor[i] ],
-				lineTension     : 0
+				label            : chartData.dataSet_labels[i],
+				data             : row,
+				borderWidth      : 3,
+				fill             : false,
+				pointRadius      : 3,
+				pointHoverRadius : 3,
+				pointHitRadius   : 3,
+				pointBorderWidth : 2
 			};
 
 			chartOpts.data.datasets.push(rowData);
@@ -321,10 +392,10 @@ function newWeatherApp(params) {
 			var chartDiv = document.getElementById(container).getContext('2d');
 			var isSinglePoint = false;
 
-			var colorChoice = {
-				borderColor : [ '#EA6A47', '#1599D8', '#66ab79' ]
-			};
-			var chartOpts = {
+			// var colorChoice = {
+			// 	borderColor : [ '#EA6A47', '#1599D8', '#66ab79' ]
+			// };
+			var chartOpts_MOBILE = {
 				type    : 'line',
 				data    : {
 					labels   : chartData.labelChunks[day],
@@ -339,10 +410,26 @@ function newWeatherApp(params) {
 							bottom : 0
 						}
 					},
+					plugins    : {
+						colorschemes : {
+							scheme : 'tableau.NurielStone9'
+						},
+						crosshair    : {
+							sync : {
+								enabled : false // enable trace line syncing with other charts
+							},
+							zoom : {
+								enabled : false // enable zooming
+							}
+						}
+					},
 					tooltips   : {
-						callbacks : {
+						titleMarginBottom : 10,
+						bodySpacing       : 10,
+						titleFontSize     : 14,
+						callbacks         : {
 							label : function(tooltipItem, data) {
-								var label = ' ' + tooltipItem.yLabel + chartData.format;
+								var label = data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.yLabel + chartData.format;
 								return label;
 							}
 						}
@@ -362,7 +449,7 @@ function newWeatherApp(params) {
 										second : 'h:MM:SS',
 										minute : 'h:MM A',
 										hour   : 'hA',
-										day    : 'MMM D',
+										day    : 'ddd D',
 										month  : 'YYYY MMM',
 										year   : 'YYYY'
 									}
@@ -400,27 +487,27 @@ function newWeatherApp(params) {
 			chartData.dataChunks.forEach(function(row, i) {
 				isSinglePoint = row.length == 1 ? true : false;
 				var rowData = {
-					label           : chartData.dataSet_labels[i],
-					data            : row[day],
-					borderWidth     : 3,
-					backgroundColor : 'transparent',
-					borderColor     : [ colorChoice.borderColor[i] ],
-					lineTension     : 0
+					label       : chartData.dataSet_labels[i],
+					data        : row[day],
+					borderWidth : 3,
+					fill        : false
 				};
 
-				chartOpts.data.datasets.push(rowData);
+				chartOpts_MOBILE.data.datasets.push(rowData);
 			});
 
 			if (chartData.format == '%') {
-				chartOpts.options.scales.yAxes[0].ticks['min'] = 0;
-				chartOpts.options.scales.yAxes[0].ticks['max'] = 100;
-				chartOpts.options.scales.yAxes[0].ticks['callback'] = function(value) {
+				chartOpts_MOBILE.options.scales.yAxes[0].ticks['min'] = 0;
+				chartOpts_MOBILE.options.scales.yAxes[0].ticks['max'] = 100;
+				chartOpts_MOBILE.options.scales.yAxes[0].ticks['callback'] = function(value) {
 					return value + '%';
 				};
 			}
-
+			console.log('isSinglePoint', isSinglePoint);
 			if (!isSinglePoint) {
-				document[container] = new Chart(chartDiv, chartOpts);
+				document[container] = new Chart(chartDiv, chartOpts_MOBILE);
+			} else {
+				_this.createDonutChart(chartData, container);
 			}
 		}
 	};
