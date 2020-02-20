@@ -17,7 +17,6 @@
 </head>
 
 <body class="dark-mode">
-  <!-- darkMode -->
   <div class="wrapper">
     <!-- Sidebar -->
     <nav id="sidebar">
@@ -25,12 +24,19 @@
         <a href="/" class="navbar-brand"><img class="logo" src="/static/images/logo_white.png"></a>
       </div>
       <ul class="list-unstyled components ">
-        <p class="listHeader text-center">Recent Searches</p>
+        <p class="listHeader text-center"><i class="fas fa-history"></i>&nbsp;&nbsp;&nbsp;Recent Searches</p>
         <div id="favoritesConatiner"></div>
       </ul>
+      <div class="options text-center py-3">
+        <button id="metricToggle" type="button" class="btn btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
+          <div class="handle"></div>
+        </button>
+      </div>
     </nav>
-    <!-- Page Content -->
+    <!-- End Sidebar -->
+    <!-- Content -->
     <div id="content">
+      <!-- Top Nav -->
       <nav class="navbar fixed-top navbar-expand-lg">
         <div class="d-flex flex-grow-1">
           <a id="sidebarCollapse" class="text-light"><i class="fas fa-bars"></i></a>
@@ -39,20 +45,26 @@
           </div>
         </div>
       </nav>
+      <!-- End Top Nav -->
+      <!-- Desktop Chart View -->
       <div class="container-fluid chartsView h-100 d-none d-sm-block">
         <div id="titleContainer"></div>
         <div class="row" id="fsChartConatiner"></div>
         <div class="row" id="chartConatiner"></div>
       </div>
+      <!-- End Desktop Chart View  -->
+      <!-- Mobile Chart View  -->
       <div class="container-fluid chartsViewMobile h-100 d-block d-sm-none">
         <div class="row" id="titleContainerMobile"></div>
         <div class="row" id="chartConatinerMobile"></div>
       </div>
+      <!-- End Mobile Chart View  -->
     </div>
   </div>
+  <!-- End Content -->
   <script type="text/javascript"
     src="https://maps.google.com/maps/api/js?v=3.exp&libraries=places&key={{apiKey}}"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="/static/js/cookie.js"></script>
   <script type="text/javascript" src="/static/js/moment.js"></script>
   <script type="text/javascript" src="/static/js/moment-timezone.js"></script>
   <script type="text/javascript" src="/static/mdb/js/jquery.min.js"></script>

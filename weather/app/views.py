@@ -29,7 +29,14 @@ def getconditions():
     print(data)  # parse as JSON
     lat = data['lat']
     lng = data['lng']
-    imperial = data['imperial']
+    isImperial = data['imperial']
+
+    #set data labels for frontend
+
+    label_accumulation = "mm"
+    label_speed = "km/h"
+    label_temp = "°C"
+    label_percent = "%"
 
     # setting optimal conditions
     #Temperature in C
@@ -220,15 +227,20 @@ def getconditions():
         P_sun.append(100*(IT_sun_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
         P_shadow.append(
             100*(IT_shade_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
-        if imperial==True:
+        if isImperial==True:
             temperature_act[i]=9/5*temperature_act[i]+32
             Tsun_felt[i]=9/5*Tsun_felt[i]+32
             Tshade_felt[i]=9/5*Tshade_felt[i]+32
             wind_act[i]=wind_act[i]/1.609344
             rain_act[i]=rain_act[i]/25.4
             snow_act[i]=snow_act[i]/25.4
+            label_accumulation = "in"
+            label_speed = "mph"
+            label_temp = "°F"
         i = i+1
 
+
+    
     resp_json = {
         "time": time,
         "timemonth": timemonth,
@@ -239,77 +251,77 @@ def getconditions():
         "chart_pairing": {
             "rain_chart": {
                 "rows": [rain_act],
-                "dataSet_labels": ["Accumulation (mm)"],
+                "dataSet_labels": ["Accumulation (" + label_accumulation + ")"],
                 "labels": time,
                 "axis_labels": {
-                    "yAxis": "Accumulation (mm)",
+                    "yAxis": "Accumulation (" + label_accumulation + ")",
                     "xAxis": ""
                 },
                 "title": "Rain Accumulation",
-                "format": "",
+                "format": label_accumulation,
                 "show_legend": "none",
                 "fullScreen": False
             },
             "snow_chart": {
                 "rows": [snow_act],
-                "dataSet_labels": ["Accumulation (mm)"],
+                "dataSet_labels": ["Accumulation (" + label_accumulation + ")"],
                 "labels": time,
                 "axis_labels": {
-                    "yAxis": "Accumulation (mm)",
+                    "yAxis": "Accumulation (" + label_accumulation + ")",
                     "xAxis": ""
                 },
                 "title": "Snow Accumulation",
-                "format": "",
+                "format": label_accumulation,
                 "show_legend": "none",
                 "fullScreen": False
             },
             "cloudiness_chart": {
                 "rows": [cloudiness],
-                "dataSet_labels": ["Cloudiness (%)"],
+                "dataSet_labels": ["Cloudiness ("+ label_percent + ")"],
                 "labels": time,
                 "axis_labels": {
-                    "yAxis": "Cloudiness (%)",
+                    "yAxis": "Cloudiness ("+ label_percent + ")",
                     "xAxis": ""
                 },
                 "title": "Cloudiness",
-                "format": "percent",
+                "format": label_percent,
                 "show_legend": "none",
                 "fullScreen": False
             },
             "humidity_chart": {
                 "rows": [humidity_act],
-                "dataSet_labels": ["Humidity (%)"],
+                "dataSet_labels": ["Humidity ("+ label_percent + ")"],
                 "labels": time,
                 "title": "Humidity",
                 "axis_labels": {
-                    "yAxis": "Humidity (%)",
+                    "yAxis": "Humidity ("+ label_percent + ")",
                     "xAxis": ""
                 },
-                "format": "percent",
+                "format": label_percent,
                 "show_legend": "none",
                 "fullScreen": False
             },
             "wind_chart": {
                 "rows": [wind_act],
-                "dataSet_labels": ["Wind (km/h)"],
+                "dataSet_labels": ["Wind (" + label_speed + ")"],
                 "labels": time,
                 "title": "Wind",
                 "axis_labels": {
-                    "yAxis": "Wind (km/h)",
+                    "yAxis": "Wind (" + label_speed + ")",
                     "xAxis": ""
                 },
-                "format": "",
+                "format": label_speed,
                 "show_legend": "none",
                 "fullScreen": False
             },
             "temperature_felt_chart": {
                 "rows": [Tsun_felt, Tshade_felt, temperature_act],
-                "dataSet_labels": ["Temp in Sun", "Temp in Shade", "Measured Temp"],
+                "dataSet_labels": ["Sun", "Shade", "Actual"],
                 "labels": time,
                 "title": "Temperature Felt",
-                "format": "",
+                "format":label_temp,
                 "axis_labels": {
-                    "yAxis": "Temperature Felt (C)",
+                    "yAxis": "Temperature Felt (" + label_temp + ")",
                     "xAxis": ""
                 },
                 "show_legend": "",
@@ -320,9 +332,9 @@ def getconditions():
                 "dataSet_labels": ["In Sun", "In Shade"],
                 "labels": time,
                 "title": "Climbing Fun",
-                "format": "percent",
+                "format": label_percent,
                 "axis_labels": {
-                    "yAxis": "Climbing Fun (%)",
+                    "yAxis": "Climbing Fun (" + label_percent + ")",
                     "xAxis": ""
                 },
                 "show_legend": "",
