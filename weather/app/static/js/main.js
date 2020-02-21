@@ -104,23 +104,37 @@ function newWeatherApp(params) {
 		var _this = this;
 		$(container).empty();
 		var card = $('<div>', { class: 'card card-image', style: 'background-image: url(' + image + ');' }).prependTo(container);
-		var innerDiv = $('<div>', { class: 'text-white text-center rgba-stylish-strong p-2' }).appendTo(card);
+		var innerDiv = $('<div>', { class: 'text-white text-center rgba-stylish-strong' }).appendTo(card);
 		var paddingDiv = $('<div>', { class: 'py-5' }).appendTo(innerDiv);
 		var heading = $('<h1>', { text: name, class: 'card-title h1 my-4 py-2' }).prependTo(paddingDiv);
 	};
-	this.createAtAGlance = function(container) {
+
+	this.createAtAGlance = function(data, label, title, format, iconClass, container) {
 		var _this = this;
-		$(container).empty();
-		var card = $('<div>', { class: 'card card-image', style: 'background-image: url(' + image + ');' }).prependTo(container);
-		var innerDiv = $('<div>', { class: 'text-white text-center rgba-stylish-strong p-2' }).appendTo(card);
-		var paddingDiv = $('<div>', { class: 'py-5' }).appendTo(innerDiv);
-		var heading = $('<h1>', { text: name, class: 'card-title h1 my-4 py-2' }).prependTo(paddingDiv);
+
+		var column = $('<div>', { class: 'col-xl-3 col-md-6 col-12 mb-3' }).appendTo(container);
+		var card = $('<div>', { class: 'card card-stats' }).appendTo(column);
+		var cardbody = $('<div>', { class: 'card-body' }).appendTo(card);
+		var innerRow = $('<div>', { class: 'row' }).appendTo(cardbody);
+		var innercol5 = $('<div>', { class: 'col-sm-3 col-2' }).appendTo(innerRow);
+		var iconContainer = $('<div>', { class: 'icon-big text-center icon-warning' }).appendTo(innercol5);
+		$('<div>', { class: iconClass }).appendTo(iconContainer);
+
+		var innercol7 = $('<div>', { class: 'col-sm-9 col-10' }).appendTo(innerRow);
+		var numbersContainer = $('<div>', { class: 'numbers' }).appendTo(innercol7);
+
+		$('<h5>', { class: 'text-main', text: title }).appendTo(numbersContainer);
+		$('<p>', { class: 'card-category', text: label }).appendTo(numbersContainer);
+		$('<h3>', { class: 'card-title', text: data + ' ' + format }).appendTo(numbersContainer);
 	};
+
 	this.formatChartData = function(chartData) {
 		var _this = this;
 		$('#chartConatiner').empty();
 		$('#fsChartConatiner').empty();
 		$('#chartConatinerMobile').empty();
+		$('#atAGlance').empty();
+		$('#atAGlanceMobile').empty();
 
 		for (key in chartData.chart_pairing) {
 			// Loop through and format as date
@@ -151,21 +165,80 @@ function newWeatherApp(params) {
 			_this.createContainer_mobile(chartData.chart_pairing[key], key);
 			_this.drawChart_mobile(chartData.chart_pairing[key], key);
 		}
+		_this.createAtAGlance(chartData.chart_pairing.fun_chart.rows[0][0], chartData.chart_pairing.fun_chart.dataSet_labels[0], chartData.chart_pairing.fun_chart.title, chartData.chart_pairing.fun_chart.format, 'fas fa-sun', '#atAGlance');
+		_this.createAtAGlance(
+			chartData.chart_pairing.fun_chart.rows[1][0],
+			chartData.chart_pairing.fun_chart.dataSet_labels[1],
+			chartData.chart_pairing.fun_chart.title,
+			chartData.chart_pairing.fun_chart.format,
+			'fas fa-cloud',
+			'#atAGlance'
+		);
+		_this.createAtAGlance(
+			chartData.chart_pairing.temperature_felt_chart.rows[0][0],
+			chartData.chart_pairing.temperature_felt_chart.dataSet_labels[0],
+			chartData.chart_pairing.temperature_felt_chart.title,
+			chartData.chart_pairing.temperature_felt_chart.format,
+			'fas fa-sun',
+			'#atAGlance'
+		);
+		_this.createAtAGlance(
+			chartData.chart_pairing.temperature_felt_chart.rows[1][0],
+			chartData.chart_pairing.temperature_felt_chart.dataSet_labels[1],
+			chartData.chart_pairing.temperature_felt_chart.title,
+			chartData.chart_pairing.temperature_felt_chart.format,
+			'fas fa-cloud',
+			'#atAGlance'
+		);
+
+		_this.createAtAGlance(
+			chartData.chart_pairing.fun_chart.rows[0][0],
+			chartData.chart_pairing.fun_chart.dataSet_labels[0],
+			chartData.chart_pairing.fun_chart.title,
+			chartData.chart_pairing.fun_chart.format,
+			'fas fa-sun',
+			'#atAGlanceMobile'
+		);
+		_this.createAtAGlance(
+			chartData.chart_pairing.fun_chart.rows[1][0],
+			chartData.chart_pairing.fun_chart.dataSet_labels[1],
+			chartData.chart_pairing.fun_chart.title,
+			chartData.chart_pairing.fun_chart.format,
+			'fas fa-cloud',
+			'#atAGlanceMobile'
+		);
+		_this.createAtAGlance(
+			chartData.chart_pairing.temperature_felt_chart.rows[0][0],
+			chartData.chart_pairing.temperature_felt_chart.dataSet_labels[0],
+			chartData.chart_pairing.temperature_felt_chart.title,
+			chartData.chart_pairing.temperature_felt_chart.format,
+			'fas fa-sun',
+			'#atAGlanceMobile'
+		);
+		_this.createAtAGlance(
+			chartData.chart_pairing.temperature_felt_chart.rows[1][0],
+			chartData.chart_pairing.temperature_felt_chart.dataSet_labels[1],
+			chartData.chart_pairing.temperature_felt_chart.title,
+			chartData.chart_pairing.temperature_felt_chart.format,
+			'fas fa-cloud',
+			'#atAGlanceMobile'
+		);
 	};
+
 	this.createContainer = function(chart_id, fs, chartData) {
 		var _this = this;
 		if (fs) {
 			var col = $('<div>', { class: 'col-lg-12 col-xl-12 mt-3' }).appendTo('#fsChartConatiner');
 			var card = $('<div>', { class: 'card' }).appendTo(col);
 			var card_header = $('<div>', { class: 'card-header' }).appendTo(card);
-			var card_title = $('<h4>', { class: 'card-title', text: chartData.title }).appendTo(card_header);
+			var card_title = $('<h3>', { class: 'card-title', text: chartData.title }).appendTo(card_header);
 			var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
 			var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 		} else {
 			var col = $('<div>', { class: 'col-lg-12 col-xl-6 mt-3' }).appendTo('#chartConatiner');
 			var card = $('<div>', { class: 'card' }).appendTo(col);
 			var card_header = $('<div>', { class: 'card-header' }).appendTo(card);
-			var card_title = $('<h4>', { class: 'card-title', text: chartData.title }).appendTo(card_header);
+			var card_title = $('<h3>', { class: 'card-title', text: chartData.title }).appendTo(card_header);
 			var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
 			var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 		}
@@ -179,7 +252,7 @@ function newWeatherApp(params) {
 		var days_list = $('<ul>', { class: 'nav nav-tabs daysList d-flex' }).appendTo(card);
 		var days_chart_container = $('<div>', { class: 'tab-content daysChart' }).appendTo(card);
 
-		$('<h4>', { class: 'card-title font-weight-bold', text: chartData.title }).appendTo(card_body);
+		$('<h3>', { class: 'card-title font-weight-bold', text: chartData.title }).appendTo(card_body);
 
 		// Build tabs
 		var i = 0;
@@ -223,11 +296,12 @@ function newWeatherApp(params) {
 			i++;
 		}
 	};
+
 	this.createDonutChart = function(chartData, container, day) {
 		var _this = this;
 		var parentContainer = $('#' + container).parent();
 		$('#' + container).remove();
-		var singleWrapper = $('<div>', { class: 'text-center' }).appendTo(parentContainer);
+		var singleWrapper = $('<div>', { class: 'text-center mt-3' }).appendTo(parentContainer);
 
 		$('<h2>', { class: 'singleWrapper_title', text: chartData.labels[0] }).appendTo(singleWrapper);
 		chartData.dataChunks.forEach(function(row, i) {
@@ -235,6 +309,7 @@ function newWeatherApp(params) {
 			$('<h1>', { class: 'card-title', text: row[day][0] + chartData.format }).appendTo(singleWrapper);
 		});
 	};
+
 	this.drawChart = function(chartData, container) {
 		var _this = this;
 		var chartDiv = document.getElementById(container).getContext('2d');
@@ -349,7 +424,8 @@ function newWeatherApp(params) {
 				pointRadius      : 3,
 				pointHoverRadius : 3,
 				pointHitRadius   : 3,
-				pointBorderWidth : 2
+				pointBorderWidth : 2,
+				lineTension      : 0.2
 			};
 
 			chartOpts.data.datasets.push(rowData);
@@ -468,12 +544,13 @@ function newWeatherApp(params) {
 			};
 
 			chartData.dataChunks.forEach(function(row, i) {
-				isSinglePoint = row.length == 1 ? true : false;
+				isSinglePoint = row[day].length == 1 ? true : false;
 				var rowData = {
 					label       : chartData.dataSet_labels[i],
 					data        : row[day],
 					borderWidth : 3,
-					fill        : false
+					fill        : false,
+					lineTension : 0.2
 				};
 
 				chartOpts_MOBILE.data.datasets.push(rowData);
@@ -535,6 +612,7 @@ function newWeatherApp(params) {
 			}, 250);
 		}
 	};
+
 	this.loadRecients = function() {
 		var _this = this;
 		var myLocations = Cookies.get('climbingLocations') != null ? JSON.parse(Cookies.get('climbingLocations')) : [];
@@ -561,6 +639,7 @@ function newWeatherApp(params) {
 			}
 		});
 	};
+
 	/* loading Overlay */
 	this.createLoadingOverlay = function() {
 		var _this = this;
