@@ -37,15 +37,15 @@ function newWeatherApp(params) {
 			_this.getChartData();
 		});
 
-		$('#sidebarCollapse').on('click', function() {
+		$('#sidebarCollapse').on('click touchstart', function() {
 			_this.toggleSideBar();
 		});
-		$('#locationSearch').on('click', function() {
+		$('#locationSearch').on('click touchstart', function() {
 			if (window.innerWidth <= 575) {
 				_this.toggleSideBar(false);
 			}
 		});
-		$('#metricToggle').on('click', function() {
+		$('#metricToggle').on('click touchstart', function() {
 			var tm = setTimeout(function() {
 				var isMetric = $('#metricToggle').is('.active');
 				_this.manageMetricToggle(isMetric);
@@ -628,7 +628,7 @@ function newWeatherApp(params) {
 					text  : loc.address
 				}).appendTo(listItem);
 
-				favLink.on('click', function() {
+				favLink.on('click touchstart', function() {
 					$('#locationSearch').val('');
 					_this.getChartData(loc);
 
