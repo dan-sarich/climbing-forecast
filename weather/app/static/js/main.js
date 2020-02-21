@@ -595,7 +595,7 @@ function newWeatherApp(params) {
 			myLocations.unshift(foundObj);
 		}
 
-		Cookies.set('climbingLocations', JSON.stringify(myLocations));
+		Cookies.set('climbingLocations', JSON.stringify(myLocations), { expires: 365 });
 		_this.loadRecients();
 	};
 	this.manageMetricToggle = function(isMetric) {
