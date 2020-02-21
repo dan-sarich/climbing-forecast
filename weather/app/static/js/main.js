@@ -158,7 +158,7 @@ function newWeatherApp(params) {
 					chartData.chart_pairing[key].dataChunks[x][t].push(rows[i]);
 				});
 			});
-
+			console.log('chartData', chartData);
 			_this.createContainer(key, chartData.chart_pairing[key].fullScreen, chartData.chart_pairing[key]);
 			_this.drawChart(chartData.chart_pairing[key], key);
 
@@ -377,7 +377,7 @@ function newWeatherApp(params) {
 									second : 'h:MM:SS',
 									minute : 'h:MM',
 									hour   : 'hA',
-									day    : 'ddd D',
+									day    : 'ddd DD',
 									month  : 'YYYY MMM',
 									year   : 'YYYY'
 								}
@@ -387,7 +387,8 @@ function newWeatherApp(params) {
 								fontColor : '#fff'
 							},
 							ticks      : {
-								fontColor : '#fff'
+								fontColor : '#fff',
+								source    : 'data'
 							},
 							gridLines  : {
 								display : false
@@ -507,7 +508,7 @@ function newWeatherApp(params) {
 										second : 'h:MM:SS',
 										minute : 'h:MM A',
 										hour   : 'hA',
-										day    : 'ddd D',
+										day    : 'ddd DD',
 										month  : 'YYYY MMM',
 										year   : 'YYYY'
 									}
