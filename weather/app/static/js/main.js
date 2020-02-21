@@ -377,7 +377,7 @@ function newWeatherApp(params) {
 									second : 'h:MM:SS',
 									minute : 'h:MM',
 									hour   : 'hA',
-									day    : 'ddd DD',
+									day    : 'MMM D',
 									month  : 'YYYY MMM',
 									year   : 'YYYY'
 								}
@@ -387,8 +387,7 @@ function newWeatherApp(params) {
 								fontColor : '#fff'
 							},
 							ticks      : {
-								fontColor : '#fff',
-								source    : 'data'
+								fontColor : '#fff'
 							},
 							gridLines  : {
 								display : false
