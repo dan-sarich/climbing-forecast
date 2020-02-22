@@ -146,12 +146,12 @@ function newWeatherApp(params) {
 			chartData.chart_pairing[key].dataChunks = [];
 
 			chartData.chart_pairing[key].labels.forEach(function(time, i) {
-				var tz = moment(time).tz(chartData.timezone);
-				chartData.chart_pairing[key].labels[i] = tz;
+				var formattedTime = new Date(time);
+				chartData.chart_pairing[key].labels[i] = formattedTime;
 
-				var t = tz.format('ddd');
+				var t = moment(time).format('ddd');
 				if (typeof chartData.chart_pairing[key].labelChunks[t] == 'undefined') chartData.chart_pairing[key].labelChunks[t] = [];
-				chartData.chart_pairing[key].labelChunks[t].push(tz);
+				chartData.chart_pairing[key].labelChunks[t].push(formattedTime);
 
 				// Loop through rows and format numbers
 				chartData.chart_pairing[key].rows.forEach(function(rows, x) {
