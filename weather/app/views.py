@@ -30,6 +30,7 @@ def getconditions():
     lat = data['lat']
     lng = data['lng']
     isImperial = data['imperial']
+    Timezoneshift = data['utc_offset']
 
     #set data labels for frontend
 
@@ -80,10 +81,7 @@ def getconditions():
     IR_moderate = special.erfc((Rspace-Rcut_moderate)*2.35482/Rwid_moderate)/2
     IR_strong = special.erfc((Rspace-Rcut_strong)*2.35482/Rwid_strong)/2
     IR_violent = special.erfc((Rspace-Rcut_violent)*2.35482/Rwid_violent)/2
-    # get timezone
-    a = requests.get(
-        'http://api.timezonedb.com/v2.1/get-time-zone?key=CO1O5TJW8L3Y&format=json&by=position&lat='+str(lat)+'&lng='+str(lng))
-    Timezone = a.json()['zoneName']
+
     # get the wheather
     API_key = app.config['OWM_API_KEY']
     owm = OWM(API_key)
@@ -118,8 +116,7 @@ def getconditions():
     for weather in f:
         date_str = str(weather.get_reference_time('date'))
         datetime_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S+00:00")
-        datetime_obj_utc = datetime_obj.replace(tzinfo=timezone('UTC'))
-        timelocal_dummy = datetime_obj_utc.astimezone(timezone(Timezone))
+        timelocal_dummy = datetime_obj + timedelta(minutes=Timezoneshift)
         time.append(timelocal_dummy)
         timehr.append(timelocal_dummy.hour)
         timeday.append(timelocal_dummy.day)
@@ -227,6 +224,7 @@ def getconditions():
         P_sun.append(100*(IT_sun_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
         P_shadow.append(
             100*(IT_shade_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
+        #test imperial
         if isImperial==True:
             temperature_act[i]=9/5*temperature_act[i]+32
             Tsun_felt[i]=9/5*Tsun_felt[i]+32
@@ -237,6 +235,17 @@ def getconditions():
             label_accumulation = "in"
             label_speed = "mph"
             label_temp = "°F"
+        #round to one digit (rain and snow to two, inch is small)
+        temperature_act[i]=np.round(P_sun[i],1)
+        Tsun_felt[i]=np.round(Tsun_felt[i],1)
+        Tshade_felt[i]=np.round(Tshade_felt[i],1)
+        cloudiness[i]=np.round(cloudiness[i],1)
+        wind_act[i]=np.round(wind_act[i],1)
+        humidity_act[i]=np.round(humidity_act[i],1)
+        rain_act[i]=np.round(rain_act[i],2)
+        snow_act[i]=np.round(snow_act[i],2)
+        P_sun[i]=np.round(P_sun[i],1)
+        P_shadow[i]=np.round(P_shadow[i],1)
         i = i+1
 
 
@@ -246,7 +255,6 @@ def getconditions():
         "timemonth": timemonth,
         "timeday": timeday,
         "timehr": timehr,
-        "timezone": Timezone,
         "status": status,
         "chart_pairing": {
             "rain_chart": {
