@@ -3,6 +3,7 @@ function newWeatherApp(params) {
 	this.lat = null;
 	this.lng = null;
 	this.name = null;
+	this.offsetMin = null;
 	this.formatted_address = null;
 	this.image = null;
 	this.loadingOverlay = null;
@@ -20,7 +21,7 @@ function newWeatherApp(params) {
 		var _this = this;
 		var ac = new google.maps.places.Autocomplete(document.getElementById('locationSearch'), {
 			types  : [ 'geocode' ],
-			fields : [ 'formatted_address', 'geometry.location', 'icon', 'photos', 'name', 'utc_offset' ]
+			fields : [ 'formatted_address', 'geometry.location', 'icon', 'photos', 'name', 'utc_offset_minutes' ]
 		});
 
 		_this.loadRecients();
@@ -29,11 +30,13 @@ function newWeatherApp(params) {
 
 		google.maps.event.addListener(ac, 'place_changed', function() {
 			var place = ac.getPlace();
+			console.log('place', place);
 			_this.lat = place.geometry.location.lat();
 			_this.lng = place.geometry.location.lng();
 			_this.image = typeof place.photos != 'undefined' && place.photos.length ? place.photos[0].getUrl() : '/static/images/default_background.jpg';
 			_this.formatted_address = place.formatted_address;
 			_this.name = place.name;
+			_this.offsetMin = place.utc_offset_minutes;
 			_this.getChartData();
 		});
 
@@ -67,12 +70,13 @@ function newWeatherApp(params) {
 			_this.name = savedObj.name;
 			_this.formatted_address = savedObj.address;
 			_this.image = savedObj.image;
+			_this.offsetMin = savedObj.offsetMin;
 		}
 		_this.loadingOverlayShow();
 		$.ajax({
 			type        : 'POST',
 			contentType : 'application/json',
-			data        : JSON.stringify({ lat: _this.lat, lng: _this.lng, imperial: !_this.isMetric }),
+			data        : JSON.stringify({ lat: _this.lat, lng: _this.lng, imperial: !_this.isMetric, utc_offset: _this.offsetMin }),
 			url         : '/data',
 			success     : function(result) {
 				_this.createTitleArea(_this.name, _this.image, '#titleContainer');
@@ -143,11 +147,11 @@ function newWeatherApp(params) {
 
 			chartData.chart_pairing[key].labels.forEach(function(time, i) {
 				var tz = moment(time).tz(chartData.timezone);
-				chartData.chart_pairing[key].labels[i] = tz.format('ddd, MMM DD h:mm A');
+				chartData.chart_pairing[key].labels[i] = tz;
 
 				var t = tz.format('ddd');
 				if (typeof chartData.chart_pairing[key].labelChunks[t] == 'undefined') chartData.chart_pairing[key].labelChunks[t] = [];
-				chartData.chart_pairing[key].labelChunks[t].push(tz.format('ddd, MMM DD h:mm A'));
+				chartData.chart_pairing[key].labelChunks[t].push(tz);
 
 				// Loop through rows and format numbers
 				chartData.chart_pairing[key].rows.forEach(function(rows, x) {
@@ -158,7 +162,7 @@ function newWeatherApp(params) {
 					chartData.chart_pairing[key].dataChunks[x][t].push(rows[i]);
 				});
 			});
-			console.log('chartData', chartData);
+			//console.log('chartData', chartData);
 			_this.createContainer(key, chartData.chart_pairing[key].fullScreen, chartData.chart_pairing[key]);
 			_this.drawChart(chartData.chart_pairing[key], key);
 
@@ -372,12 +376,12 @@ function newWeatherApp(params) {
 						{
 							type       : 'time',
 							time       : {
-								unit           : 'day',
+								unit           : 'hour',
 								displayFormats : {
 									second : 'h:MM:SS',
 									minute : 'h:MM',
 									hour   : 'hA',
-									day    : 'MMM D',
+									day    : 'ddd D',
 									month  : 'YYYY MMM',
 									year   : 'YYYY'
 								}
@@ -576,11 +580,12 @@ function newWeatherApp(params) {
 		var _this = this;
 		var myLocations = Cookies.get('climbingLocations') != null ? JSON.parse(Cookies.get('climbingLocations')) : [];
 		var locationObj = {
-			lat     : _this.lat,
-			lng     : _this.lng,
-			name    : _this.name,
-			address : _this.formatted_address,
-			image   : _this.image
+			lat       : _this.lat,
+			lng       : _this.lng,
+			name      : _this.name,
+			address   : _this.formatted_address,
+			image     : _this.image,
+			offsetMin : _this.offsetMin
 		};
 
 		var foundObj = myLocations.find(function(loc, i) {
