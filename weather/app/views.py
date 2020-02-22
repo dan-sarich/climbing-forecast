@@ -236,7 +236,7 @@ def getconditions():
             label_speed = "mph"
             label_temp = "°F"
         #round to one digit (rain and snow to two, inch is small)
-        temperature_act[i]=np.round(P_sun[i],1)
+        temperature_act[i]=np.round(temperature_act[i],1)
         Tsun_felt[i]=np.round(Tsun_felt[i],1)
         Tshade_felt[i]=np.round(Tshade_felt[i],1)
         cloudiness[i]=np.round(cloudiness[i],1)
