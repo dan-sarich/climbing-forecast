@@ -58,7 +58,7 @@ def getconditions():
     Rcut_violent = -48
     Rwid_violent = 12
     # other manual factors
-    sunfactor = 10
+    sunfactor = 8.3
     sunrise = 8
     sunset = 18
 
@@ -240,7 +240,7 @@ def getconditions():
         i = i+1
 
 
-    
+
     resp_json = {
         "time": time,
         "timemonth": timemonth,
