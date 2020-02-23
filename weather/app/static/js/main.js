@@ -9,6 +9,9 @@ function newWeatherApp(params) {
 	this.loadingOverlay = null;
 	this.loadingCntBox = null;
 	this.loadingDisplayTimer = null;
+	this.cookieKey = 'climbingLocations_20200221';
+
+	var _this = this;
 
 	this.init = function() {
 		// CHART DEFAULTS
@@ -18,7 +21,6 @@ function newWeatherApp(params) {
 		Chart.defaults.global.legend.labels.boxWidth = 15;
 		Chart.defaults.global.tooltips.backgroundColor = '#000';
 
-		var _this = this;
 		var ac = new google.maps.places.Autocomplete(document.getElementById('locationSearch'), {
 			types  : [ 'geocode' ],
 			fields : [ 'formatted_address', 'geometry.location', 'icon', 'photos', 'name', 'utc_offset_minutes' ]
@@ -62,8 +64,6 @@ function newWeatherApp(params) {
 	};
 
 	this.getChartData = function(savedObj) {
-		var _this = this;
-
 		if (savedObj != null) {
 			_this.lat = savedObj.lat;
 			_this.lng = savedObj.lng;
@@ -92,7 +92,6 @@ function newWeatherApp(params) {
 	};
 
 	this.toggleSideBar = function(force) {
-		var _this = this;
 		if (force != null) {
 			$('#sidebar').toggleClass('active', force);
 			$('.navbar').toggleClass('active', force);
@@ -105,7 +104,6 @@ function newWeatherApp(params) {
 	};
 
 	this.createTitleArea = function(name, image, container) {
-		var _this = this;
 		$(container).empty();
 		var card = $('<div>', { class: 'card card-image', style: 'background-image: url(' + image + ');' }).prependTo(container);
 		var innerDiv = $('<div>', { class: 'text-white text-center rgba-stylish-strong' }).appendTo(card);
@@ -114,8 +112,6 @@ function newWeatherApp(params) {
 	};
 
 	this.createAtAGlance = function(data, label, title, format, iconClass, container) {
-		var _this = this;
-
 		var column = $('<div>', { class: 'col-xl-3 col-md-6 col-12 mb-3' }).appendTo(container);
 		var card = $('<div>', { class: 'card card-stats' }).appendTo(column);
 		var cardbody = $('<div>', { class: 'card-body' }).appendTo(card);
@@ -133,7 +129,6 @@ function newWeatherApp(params) {
 	};
 
 	this.formatChartData = function(chartData) {
-		var _this = this;
 		$('#chartConatiner').empty();
 		$('#fsChartConatiner').empty();
 		$('#chartConatinerMobile').empty();
@@ -248,7 +243,6 @@ function newWeatherApp(params) {
 	};
 
 	this.createContainer = function(chart_id, fs, chartData) {
-		var _this = this;
 		if (fs) {
 			var col = $('<div>', { class: 'col-lg-12 col-xl-12 mt-3' }).appendTo('#fsChartConatiner');
 			var card = $('<div>', { class: 'card' }).appendTo(col);
@@ -268,7 +262,6 @@ function newWeatherApp(params) {
 	};
 
 	this.createContainer_mobile = function(chartData, chart_id) {
-		var _this = this;
 		var col = $('<div>', { class: 'col-12 mt-3' }).appendTo('#chartConatinerMobile');
 		var card = $('<div>', { class: 'card' }).appendTo(col);
 		var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
@@ -327,7 +320,6 @@ function newWeatherApp(params) {
 	};
 
 	this.createDonutChart = function(chartData, container, day) {
-		var _this = this;
 		var parentContainer = $('#' + container).parent();
 		$('#' + container).remove();
 		var singleWrapper = $('<div>', { class: 'text-center mt-3' }).appendTo(parentContainer);
@@ -340,7 +332,6 @@ function newWeatherApp(params) {
 	};
 
 	this.drawChart = function(chartData, container) {
-		var _this = this;
 		var chartDiv = document.getElementById(container).getContext('2d');
 		var chartOpts = {
 			type    : 'line',
@@ -474,7 +465,6 @@ function newWeatherApp(params) {
 	};
 
 	this.drawChart_mobile = function(chartData, chart_id) {
-		var _this = this;
 		for (var day in chartData.labelChunks) {
 			var container = chart_id + '_' + day;
 			var chartDiv = document.getElementById(container).getContext('2d');
@@ -607,8 +597,7 @@ function newWeatherApp(params) {
 	};
 
 	this.saveToRecients = function() {
-		var _this = this;
-		var myLocations = Cookies.get('climbingLocations') != null ? JSON.parse(Cookies.get('climbingLocations')) : [];
+		var myLocations = Cookies.get(_this.cookieKey) != null ? JSON.parse(Cookies.get(_this.cookieKey)) : [];
 		var locationObj = {
 			lat       : _this.lat,
 			lng       : _this.lng,
@@ -630,12 +619,10 @@ function newWeatherApp(params) {
 			myLocations.unshift(foundObj);
 		}
 
-		Cookies.set('climbingLocations', JSON.stringify(myLocations), { expires: 365 });
+		Cookies.set(_this.cookieKey, JSON.stringify(myLocations), { expires: 365 });
 		_this.loadRecients();
 	};
 	this.manageMetricToggle = function(isMetric) {
-		var _this = this;
-
 		if (isMetric != null) {
 			_this.isMetric = isMetric;
 			Cookies.set('isMetricToggle', _this.isMetric);
@@ -649,8 +636,7 @@ function newWeatherApp(params) {
 	};
 
 	this.loadRecients = function() {
-		var _this = this;
-		var myLocations = Cookies.get('climbingLocations') != null ? JSON.parse(Cookies.get('climbingLocations')) : [];
+		var myLocations = Cookies.get(_this.cookieKey) != null ? JSON.parse(Cookies.get(_this.cookieKey)) : [];
 
 		$('#favoritesConatiner').empty();
 		if (myLocations.length) $('.custom-sidebar').show();
@@ -677,8 +663,6 @@ function newWeatherApp(params) {
 
 	/* loading Overlay */
 	this.createLoadingOverlay = function() {
-		var _this = this;
-
 		_this.loadingOverlay = $('<div>', { class: 'loadingOverlayBox' }).appendTo(document.body);
 		var pageOverlay = $('<div>', { class: 'loadingOverlay' }).appendTo(_this.loadingOverlay);
 
@@ -687,8 +671,6 @@ function newWeatherApp(params) {
 	};
 
 	this.loadingOverlayHide = function() {
-		var _this = this;
-
 		clearTimeout(_this.loadingDisplayTimer);
 		$(_this.loadingOverlay).removeClass('loadingOverlayAnimate');
 		$(_this.loadingOverlay).removeClass('dspOverlay');
@@ -700,8 +682,6 @@ function newWeatherApp(params) {
 	};
 
 	this.loadingOverlayShow = function() {
-		var _this = this;
-
 		clearTimeout(_this.loadingDisplayTimer);
 		$(_this.loadingOverlay).addClass('loadingOverlayDisplay');
 		$(document.body).addClass('loadingOverlayBody');
