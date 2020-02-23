@@ -139,17 +139,19 @@ function newWeatherApp(params) {
 		$('#chartConatinerMobile').empty();
 		$('#atAGlance').empty();
 		$('#atAGlanceMobile').empty();
-
+		console.log(chartData);
 		for (key in chartData.chart_pairing) {
 			// Loop through and format as date
 			chartData.chart_pairing[key].labelChunks = {};
 			chartData.chart_pairing[key].dataChunks = [];
 
 			chartData.chart_pairing[key].labels.forEach(function(time, i) {
-				var formattedTime = new Date(time);
+				var mDate = time.substr(0, time.length - 3);
+
+				var formattedTime = new Date(mDate);
 				chartData.chart_pairing[key].labels[i] = formattedTime;
 
-				var t = moment(time).format('ddd');
+				var t = moment(mDate).format('ddd');
 				if (typeof chartData.chart_pairing[key].labelChunks[t] == 'undefined') chartData.chart_pairing[key].labelChunks[t] = [];
 				chartData.chart_pairing[key].labelChunks[t].push(formattedTime);
 
@@ -157,18 +159,34 @@ function newWeatherApp(params) {
 				chartData.chart_pairing[key].rows.forEach(function(rows, x) {
 					if (typeof chartData.chart_pairing[key].dataChunks[x] == 'undefined') chartData.chart_pairing[key].dataChunks[x] = {};
 
-					rows[i] = rows[i].toFixed(2);
 					if (typeof chartData.chart_pairing[key].dataChunks[x][t] == 'undefined') chartData.chart_pairing[key].dataChunks[x][t] = [];
 					chartData.chart_pairing[key].dataChunks[x][t].push(rows[i]);
 				});
 			});
 			//console.log('chartData', chartData);
-			_this.createContainer(key, chartData.chart_pairing[key].fullScreen, chartData.chart_pairing[key]);
-			_this.drawChart(chartData.chart_pairing[key], key);
-
-			_this.createContainer_mobile(chartData.chart_pairing[key], key);
-			_this.drawChart_mobile(chartData.chart_pairing[key], key);
 		}
+
+		_this.createContainer('fun_chart', chartData.chart_pairing['fun_chart'].fullScreen, chartData.chart_pairing['fun_chart']);
+		_this.createContainer_mobile(chartData.chart_pairing['fun_chart'], 'fun_chart');
+
+		_this.createContainer('temperature_felt_chart', chartData.chart_pairing['temperature_felt_chart'].fullScreen, chartData.chart_pairing['temperature_felt_chart']);
+		_this.createContainer_mobile(chartData.chart_pairing['temperature_felt_chart'], 'temperature_felt_chart');
+
+		_this.createContainer('cloudiness_chart', chartData.chart_pairing['cloudiness_chart'].fullScreen, chartData.chart_pairing['cloudiness_chart']);
+		_this.createContainer_mobile(chartData.chart_pairing['cloudiness_chart'], 'cloudiness_chart');
+
+		_this.createContainer('humidity_chart', chartData.chart_pairing['humidity_chart'].fullScreen, chartData.chart_pairing['humidity_chart']);
+		_this.createContainer_mobile(chartData.chart_pairing['humidity_chart'], 'humidity_chart');
+
+		_this.createContainer('rain_chart', chartData.chart_pairing['rain_chart'].fullScreen, chartData.chart_pairing['rain_chart']);
+		_this.createContainer_mobile(chartData.chart_pairing['rain_chart'], 'rain_chart');
+
+		_this.createContainer('snow_chart', chartData.chart_pairing['snow_chart'].fullScreen, chartData.chart_pairing['snow_chart']);
+		_this.createContainer_mobile(chartData.chart_pairing['snow_chart'], 'snow_chart');
+
+		_this.createContainer('wind_chart', chartData.chart_pairing['wind_chart'].fullScreen, chartData.chart_pairing['wind_chart']);
+		_this.createContainer_mobile(chartData.chart_pairing['wind_chart'], 'wind_chart');
+
 		_this.createAtAGlance(chartData.chart_pairing.fun_chart.rows[0][0], chartData.chart_pairing.fun_chart.dataSet_labels[0], chartData.chart_pairing.fun_chart.title, chartData.chart_pairing.fun_chart.format, 'fas fa-sun', '#atAGlance');
 		_this.createAtAGlance(
 			chartData.chart_pairing.fun_chart.rows[1][0],
@@ -246,6 +264,7 @@ function newWeatherApp(params) {
 			var card_body = $('<div>', { class: 'card-body' }).appendTo(card);
 			var canvas = $('<canvas>', { id: chart_id }).appendTo(card_body);
 		}
+		_this.drawChart(chartData, chart_id);
 	};
 
 	this.createContainer_mobile = function(chartData, chart_id) {
@@ -268,7 +287,7 @@ function newWeatherApp(params) {
 					href          : '#' + chart_id + '_' + day + '_container',
 					text          : day,
 					'data-day'    : day,
-					class         : 'nav-link active text-center',
+					class         : 'nav-link active text-center ',
 					id            : chart_id + '_' + day + '_tab',
 					'data-toggle' : 'tab',
 					role          : 'tab'
@@ -296,9 +315,15 @@ function newWeatherApp(params) {
 					role  : 'tabpanel'
 				}).appendTo(days_chart_container);
 			}
+			dayLink.on('click touchstart', function() {
+				var day = $(this).attr('data-day');
+
+				$('[data-day="' + day + '"]').tab('show');
+			});
 			var canvas = $('<canvas>', { id: chart_id + '_' + day }).appendTo(dayPane);
 			i++;
 		}
+		_this.drawChart_mobile(chartData, chart_id);
 	};
 
 	this.createDonutChart = function(chartData, container, day) {
@@ -307,7 +332,7 @@ function newWeatherApp(params) {
 		$('#' + container).remove();
 		var singleWrapper = $('<div>', { class: 'text-center mt-3' }).appendTo(parentContainer);
 
-		$('<h2>', { class: 'singleWrapper_title', text: chartData.labels[0] }).appendTo(singleWrapper);
+		$('<h2>', { class: 'singleWrapper_title', text: moment(chartData.labels[0]).format('lll') }).appendTo(singleWrapper);
 		chartData.dataChunks.forEach(function(row, i) {
 			$('<p>', { class: 'card-category', text: chartData.dataSet_labels[i] }).appendTo(singleWrapper);
 			$('<h1>', { class: 'card-title', text: row[day][0] + chartData.format }).appendTo(singleWrapper);
@@ -324,8 +349,9 @@ function newWeatherApp(params) {
 				datasets : []
 			},
 			options : {
-				responsive : true,
-				layout     : {
+				responsive          : true,
+				maintainAspectRatio : false,
+				layout              : {
 					padding : {
 						left   : 0,
 						right  : 0,
@@ -333,13 +359,13 @@ function newWeatherApp(params) {
 						bottom : 0
 					}
 				},
-				title      : {
+				title               : {
 					display   : false,
 					text      : chartData.title,
 					fontSize  : 24,
 					fontColor : '#fff'
 				},
-				plugins    : {
+				plugins             : {
 					colorschemes : {
 						scheme : 'tableau.NurielStone9'
 					},
@@ -352,13 +378,13 @@ function newWeatherApp(params) {
 						}
 					}
 				},
-				legend     : {
+				legend              : {
 					labels : {
 						fontColor : '#fff',
 						padding   : 20
 					}
 				},
-				tooltips   : {
+				tooltips            : {
 					mode              : 'interpolate',
 					intersect         : false,
 					titleMarginBottom : 10,
@@ -371,12 +397,13 @@ function newWeatherApp(params) {
 						}
 					}
 				},
-				scales     : {
+				scales              : {
 					xAxes : [
 						{
 							type       : 'time',
 							time       : {
-								unit           : 'hour',
+								unit           : 'day',
+								tooltipFormat  : 'lll',
 								displayFormats : {
 									second : 'h:MM:SS',
 									minute : 'h:MM',
@@ -394,7 +421,8 @@ function newWeatherApp(params) {
 								fontColor : '#fff'
 							},
 							gridLines  : {
-								display : false
+								display : false,
+								color   : '#676767'
 							}
 						}
 					],
@@ -462,7 +490,8 @@ function newWeatherApp(params) {
 					datasets : []
 				},
 				options : {
-					layout     : {
+					maintainAspectRatio : false,
+					layout              : {
 						padding : {
 							left   : 0,
 							right  : 0,
@@ -470,7 +499,7 @@ function newWeatherApp(params) {
 							bottom : 0
 						}
 					},
-					plugins    : {
+					plugins             : {
 						colorschemes : {
 							scheme : 'tableau.NurielStone9'
 						},
@@ -483,7 +512,7 @@ function newWeatherApp(params) {
 							}
 						}
 					},
-					tooltips   : {
+					tooltips            : {
 						mode              : 'interpolate',
 						intersect         : false,
 						titleMarginBottom : 10,
@@ -496,12 +525,12 @@ function newWeatherApp(params) {
 							}
 						}
 					},
-					responsive : true,
-					legend     : {
+					responsive          : true,
+					legend              : {
 						padding   : 20,
 						fontColor : '#fff'
 					},
-					scales     : {
+					scales              : {
 						xAxes : [
 							{
 								type       : 'time',
@@ -510,7 +539,7 @@ function newWeatherApp(params) {
 									displayFormats : {
 										second : 'h:MM:SS',
 										minute : 'h:MM A',
-										hour   : 'hA',
+										hour   : 'h:mmA',
 										day    : 'ddd DD',
 										month  : 'YYYY MMM',
 										year   : 'YYYY'
@@ -523,7 +552,8 @@ function newWeatherApp(params) {
 									display : false
 								},
 								ticks      : {
-									fontColor : '#fff'
+									fontColor : '#fff',
+									source    : 'data'
 								}
 							}
 						],

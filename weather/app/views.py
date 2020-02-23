@@ -32,7 +32,7 @@ def getconditions():
     isImperial = data['imperial']
     Timezoneshift = data['utc_offset']
 
-    #set data labels for frontend
+    # set data labels for frontend
 
     label_accumulation = "mm"
     label_speed = "km/h"
@@ -89,6 +89,7 @@ def getconditions():
     f = fc.get_forecast()
     # Calculations alculating probability
     time = []
+    time_global = []
     temperature_act = []
     wind_act = []
     humidity_act = []
@@ -116,6 +117,7 @@ def getconditions():
     for weather in f:
         date_str = str(weather.get_reference_time('date'))
         datetime_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S+00:00")
+        time_global.append(datetime_obj)
         timelocal_dummy = datetime_obj + timedelta(minutes=Timezoneshift)
         time.append(timelocal_dummy)
         timehr.append(timelocal_dummy.hour)
@@ -224,34 +226,32 @@ def getconditions():
         P_sun.append(100*(IT_sun_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
         P_shadow.append(
             100*(IT_shade_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
-        #test imperial
-        if isImperial==True:
-            temperature_act[i]=9/5*temperature_act[i]+32
-            Tsun_felt[i]=9/5*Tsun_felt[i]+32
-            Tshade_felt[i]=9/5*Tshade_felt[i]+32
-            wind_act[i]=wind_act[i]/1.609344
-            rain_act[i]=rain_act[i]/25.4
-            snow_act[i]=snow_act[i]/25.4
+        # test imperial
+        if isImperial == True:
+            temperature_act[i] = 9/5*temperature_act[i]+32
+            Tsun_felt[i] = 9/5*Tsun_felt[i]+32
+            Tshade_felt[i] = 9/5*Tshade_felt[i]+32
+            wind_act[i] = wind_act[i]/1.609344
+            rain_act[i] = rain_act[i]/25.4
+            snow_act[i] = snow_act[i]/25.4
             label_accumulation = "in"
             label_speed = "mph"
             label_temp = "°F"
-        #round to one digit (rain and snow to two, inch is small)
-        temperature_act[i]=np.round(temperature_act[i],1)
-        Tsun_felt[i]=np.round(Tsun_felt[i],1)
-        Tshade_felt[i]=np.round(Tshade_felt[i],1)
-        cloudiness[i]=np.round(cloudiness[i],1)
-        wind_act[i]=np.round(wind_act[i],1)
-        humidity_act[i]=np.round(humidity_act[i],1)
-        rain_act[i]=np.round(rain_act[i],2)
-        snow_act[i]=np.round(snow_act[i],2)
-        P_sun[i]=np.round(P_sun[i],1)
-        P_shadow[i]=np.round(P_shadow[i],1)
+        # round to one digit (rain and snow to two, inch is small)
+        temperature_act[i] = np.round(temperature_act[i], 1)
+        Tsun_felt[i] = np.round(Tsun_felt[i], 1)
+        Tshade_felt[i] = np.round(Tshade_felt[i], 1)
+        cloudiness[i] = cloudiness[i]
+        wind_act[i] = np.round(wind_act[i], 1)
+        humidity_act[i] = humidity_act[i]
+        rain_act[i] = np.round(rain_act[i], 2)
+        snow_act[i] = np.round(snow_act[i], 2)
+        P_sun[i] = np.round(P_sun[i], 1)
+        P_shadow[i] = np.round(P_shadow[i], 1)
         i = i+1
 
-
-
     resp_json = {
-        "time": time,
+        "time": time_global,
         "timemonth": timemonth,
         "timeday": timeday,
         "timehr": timehr,
@@ -285,10 +285,10 @@ def getconditions():
             },
             "cloudiness_chart": {
                 "rows": [cloudiness],
-                "dataSet_labels": ["Cloudiness ("+ label_percent + ")"],
+                "dataSet_labels": ["Cloudiness (" + label_percent + ")"],
                 "labels": time,
                 "axis_labels": {
-                    "yAxis": "Cloudiness ("+ label_percent + ")",
+                    "yAxis": "Cloudiness (" + label_percent + ")",
                     "xAxis": ""
                 },
                 "title": "Cloudiness",
@@ -298,11 +298,11 @@ def getconditions():
             },
             "humidity_chart": {
                 "rows": [humidity_act],
-                "dataSet_labels": ["Humidity ("+ label_percent + ")"],
+                "dataSet_labels": ["Humidity (" + label_percent + ")"],
                 "labels": time,
                 "title": "Humidity",
                 "axis_labels": {
-                    "yAxis": "Humidity ("+ label_percent + ")",
+                    "yAxis": "Humidity (" + label_percent + ")",
                     "xAxis": ""
                 },
                 "format": label_percent,
@@ -327,7 +327,7 @@ def getconditions():
                 "dataSet_labels": ["Sun", "Shade", "Actual"],
                 "labels": time,
                 "title": "Temperature Felt",
-                "format":label_temp,
+                "format": label_temp,
                 "axis_labels": {
                     "yAxis": "Temperature Felt (" + label_temp + ")",
                     "xAxis": ""
