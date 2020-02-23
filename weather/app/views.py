@@ -238,16 +238,16 @@ def getconditions():
             label_speed = "mph"
             label_temp = "°F"
         # round to one digit (rain and snow to two, inch is small)
-        temperature_act[i] = np.round(temperature_act[i], 1)
-        Tsun_felt[i] = np.round(Tsun_felt[i], 1)
-        Tshade_felt[i] = np.round(Tshade_felt[i], 1)
+        temperature_act[i] = round(temperature_act[i], 1)
+        Tsun_felt[i] = round(Tsun_felt[i], 1)
+        Tshade_felt[i] = round(Tshade_felt[i], 1)
         cloudiness[i] = cloudiness[i]
-        wind_act[i] = np.round(wind_act[i], 1)
+        wind_act[i] = round(wind_act[i], 1)
         humidity_act[i] = humidity_act[i]
-        rain_act[i] = np.round(rain_act[i], 2)
-        snow_act[i] = np.round(snow_act[i], 2)
-        P_sun[i] = np.round(P_sun[i], 1)
-        P_shadow[i] = np.round(P_shadow[i], 1)
+        rain_act[i] = round(rain_act[i], 2)
+        snow_act[i] = round(snow_act[i], 2)
+        P_sun[i] = round(P_sun[i], 1)
+        P_shadow[i] = round(P_shadow[i], 1)
         i = i+1
 
     resp_json = {
