@@ -22,7 +22,7 @@ function newWeatherApp(params) {
 		Chart.defaults.global.tooltips.backgroundColor = '#000';
 
 		var ac = new google.maps.places.Autocomplete(document.getElementById('locationSearch'), {
-			types  : [ 'geocode' ],
+			types  : [],
 			fields : [ 'formatted_address', 'geometry.location', 'icon', 'photos', 'name', 'utc_offset_minutes' ]
 		});
 
