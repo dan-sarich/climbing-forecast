@@ -1,31 +1,5 @@
-$color-background-light: #e0e0e0;
-$color-background-dark: #121212;
-$color-card-dark: #1e1e1e;
-$color-card-light: #ffffff;
-$color-text-dark: #fff;
-$color-text-light: darken($color-background-dark, 10%);
-$color-primary-med: #29b5a8;
-$color-primary-light: lighten($color-primary-med, 10%);
-$color-primary-dark: darken($color-primary-med, 10%);
-$color-secondary-dark: #ff723f;
-
-/* toggle colors */
-
-// Colors
-$brand-primary: #29b5a8;
-$brand-secondary: #ff8300;
-$gray: #6b7381;
-$gray-light: lighten($gray, 15%);
-$gray-lighter: lighten($gray, 30%);
-
-// Button Colors
-$btn-default-color: $gray;
-$btn-default-bg: $gray-lighter;
-
-// Toggle Sizes
-$toggle-default-size: 2rem;
-$toggle-default-label-width: 4rem;
-$toggle-default-font-size: 1.3rem;
+@import 'modules/vars';
+@import 'modules/mixins';
 
 body {
 	&.light-mode {
@@ -167,19 +141,40 @@ body {
 	position: absolute;
 	top: 0;
 	right: 0;
+	left: 0;
 
 	&.active {
 		width: calc(100% - 250px);
+		left: 250px;
+	}
+	@include respond-to('small') {
+		&.active {
+			width: 100%;
+			position: fixed;
+		}
 	}
 }
 .navbar {
 	left: 0;
 	transition: all 0.3s;
 
+	.searchContainer {
+		width: 50%;
+
+		@include respond-to('tablet') {
+			width: 100%;
+
+			input#locationSearch {
+				border-bottom: 0px solid transparent;
+			}
+		}
+	}
+
 	&.active {
 		left: 250px;
 	}
 }
+
 #sidebarCollapse {
 	padding: 12px 5px;
 	margin-right: 15px;
@@ -190,6 +185,11 @@ body {
 }
 .pac-container {
 	z-index: 1099 !important;
+
+	@include respond-to('tablet') {
+		width: 100% !important;
+		left: 0px !important;
+	}
 }
 .custom-fixed {
 	position: fixed;
@@ -225,9 +225,21 @@ body {
 	}
 	#chartConatiner .card-body {
 		height: 400px;
+		@include respond-to('tablet') {
+			height: 75vh;
+		}
+		@include respond-to('tablet-landscape') {
+			height: 85vh;
+		}
 	}
 	#fsChartConatiner .card-body {
 		height: 500px;
+		@include respond-to('tablet') {
+			height: 75vh;
+		}
+		@include respond-to('tablet-landscape') {
+			height: 85vh;
+		}
 	}
 }
 
@@ -273,9 +285,9 @@ body {
 	height: 100vh;
 	z-index: 999;
 	transition: all 0.3s;
-	margin-left: -250px;
+	left: -250px;
 	&.active {
-		margin-left: 0;
+		left: 0;
 	}
 	.listHeader {
 		font-size: 1.2em;
@@ -335,6 +347,21 @@ body {
 .daysChart {
 	padding: 15px 5px;
 	min-height: 275px;
+
+	.tab-pane.active {
+		animation: slide-down 500ms ease-out;
+	}
+
+	@keyframes slide-down {
+		0% {
+			opacity: 0;
+			transform: translateY(-20px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 }
 .card.card-image {
 	width: 100%;
@@ -550,35 +577,5 @@ body {
 		i {
 			line-height: 59px;
 		}
-	}
-}
-
-@media (max-width: 768px) {
-	#content {
-		width: 100%;
-		margin-left: 0;
-		margin-right: 0;
-	}
-	#content.active {
-		width: 100%;
-		margin-left: 250px;
-		margin-right: -250px;
-	}
-}
-@media (min-width: 576px) {
-	.navbar .searchContainer {
-		width: 50%;
-	}
-}
-@media (max-width: 576px) {
-	.navbar .searchContainer {
-		width: 100%;
-	}
-	.navbar .searchContainer input#locationSearch {
-		border-bottom: 0px solid transparent;
-	}
-	.pac-container {
-		width: 100% !important;
-		left: 0px !important;
 	}
 }

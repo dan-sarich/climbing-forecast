@@ -55,6 +55,10 @@ function newWeatherApp(params) {
 				var isMetric = $('#metricToggle').is('.active');
 				_this.manageMetricToggle(isMetric);
 				_this.getChartData();
+
+				if (window.innerWidth <= 575) {
+					_this.toggleSideBar(false);
+				}
 			}, 250);
 		});
 
@@ -115,6 +119,11 @@ function newWeatherApp(params) {
 		var column = $('<div>', { class: 'col-xl-3 col-md-6 col-12 mb-3' }).appendTo(container);
 		var card = $('<div>', { class: 'card card-stats' }).appendTo(column);
 		var cardbody = $('<div>', { class: 'card-body' }).appendTo(card);
+
+		var titleRow = $('<div>', { class: 'row' }).appendTo(cardbody);
+		var titleCol = $('<div>', { class: 'col-12' }).appendTo(titleRow);
+		$('<h5>', { class: 'text-main text-right', html: title }).appendTo(titleCol);
+
 		var innerRow = $('<div>', { class: 'row' }).appendTo(cardbody);
 		var innercol5 = $('<div>', { class: 'col-sm-3 col-2' }).appendTo(innerRow);
 		var iconContainer = $('<div>', { class: 'icon-big text-center icon-warning' }).appendTo(innercol5);
@@ -123,7 +132,6 @@ function newWeatherApp(params) {
 		var innercol7 = $('<div>', { class: 'col-sm-9 col-10' }).appendTo(innerRow);
 		var numbersContainer = $('<div>', { class: 'numbers' }).appendTo(innercol7);
 
-		$('<h5>', { class: 'text-main', text: title }).appendTo(numbersContainer);
 		$('<p>', { class: 'card-category', text: label }).appendTo(numbersContainer);
 		$('<h3>', { class: 'card-title', text: data + ' ' + format }).appendTo(numbersContainer);
 	};
@@ -287,7 +295,7 @@ function newWeatherApp(params) {
 				}).appendTo(dayTab);
 
 				var dayPane = $('<div>', {
-					class : 'tab-pane chart-container fade show active',
+					class : 'tab-pane chart-container show active',
 					id    : chart_id + '_' + day + '_container',
 					role  : 'tabpanel'
 				}).appendTo(days_chart_container);
@@ -303,7 +311,7 @@ function newWeatherApp(params) {
 				}).appendTo(dayTab);
 
 				var dayPane = $('<div>', {
-					class : 'tab-pane chart-container fade',
+					class : 'tab-pane chart-container',
 					id    : chart_id + '_' + day + '_container',
 					role  : 'tabpanel'
 				}).appendTo(days_chart_container);
@@ -313,7 +321,7 @@ function newWeatherApp(params) {
 
 				$('[data-day="' + day + '"]').tab('show');
 			});
-			var canvas = $('<canvas>', { id: chart_id + '_' + day }).appendTo(dayPane);
+			var canvas = $('<canvas>', { id: chart_id + '_' + day, height: 250 }).appendTo(dayPane);
 			i++;
 		}
 		_this.drawChart_mobile(chartData, chart_id);
@@ -461,10 +469,12 @@ function newWeatherApp(params) {
 				return value + '%';
 			};
 		}
+
 		document[container] = new Chart(chartDiv, chartOpts);
 	};
 
 	this.drawChart_mobile = function(chartData, chart_id) {
+		var syncGroup = 1;
 		for (var day in chartData.labelChunks) {
 			var container = chart_id + '_' + day;
 			var chartDiv = document.getElementById(container).getContext('2d');
@@ -495,7 +505,8 @@ function newWeatherApp(params) {
 						},
 						crosshair    : {
 							sync : {
-								enabled : false // enable trace line syncing with other charts
+								enabled : true, // enable trace line syncing with other charts
+								group   : syncGroup
 							},
 							zoom : {
 								enabled : false // enable zooming
@@ -594,6 +605,7 @@ function newWeatherApp(params) {
 				_this.createDonutChart(chartData, container, day);
 			}
 		}
+		syncGroup++;
 	};
 
 	this.saveToRecients = function() {

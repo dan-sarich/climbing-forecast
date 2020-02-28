@@ -1,0 +1,26 @@
+$color-background-light: #e0e0e0;
+$color-background-dark: #121212;
+$color-card-dark: #1e1e1e;
+$color-card-light: #ffffff;
+$color-text-dark: #fff;
+$color-text-light: darken($color-background-dark, 10%);
+$color-primary-med: #29b5a8;
+$color-primary-light: lighten($color-primary-med, 10%);
+$color-primary-dark: darken($color-primary-med, 10%);
+$color-secondary-dark: #ff723f;
+
+// Colors
+$brand-primary: #29b5a8;
+$brand-secondary: #ff8300;
+$gray: #6b7381;
+$gray-light: lighten($gray, 15%);
+$gray-lighter: lighten($gray, 30%);
+
+// Button Colors
+$btn-default-color: $gray;
+$btn-default-bg: $gray-lighter;
+
+// Toggle Sizes
+$toggle-default-size: 2rem;
+$toggle-default-label-width: 4rem;
+$toggle-default-font-size: 1.3rem;
