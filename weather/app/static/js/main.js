@@ -9,7 +9,7 @@ function newWeatherApp(params) {
 	this.loadingOverlay = null;
 	this.loadingCntBox = null;
 	this.loadingDisplayTimer = null;
-	this.cookieKey = 'climbingLocations_20200221';
+	this.cookieKey = 'climbingLocations_20200322';
 
 	var _this = this;
 
@@ -609,7 +609,7 @@ function newWeatherApp(params) {
 	};
 
 	this.saveToRecients = function() {
-		var myLocations = Cookies.get(_this.cookieKey) != null ? JSON.parse(Cookies.get(_this.cookieKey)) : [];
+		var myLocations = localStorage.getItem(_this.cookieKey) != null ? JSON.parse(localStorage.getItem(_this.cookieKey)) : [];
 		var locationObj = {
 			lat       : _this.lat,
 			lng       : _this.lng,
@@ -631,15 +631,15 @@ function newWeatherApp(params) {
 			myLocations.unshift(foundObj);
 		}
 
-		Cookies.set(_this.cookieKey, JSON.stringify(myLocations), { expires: 365 });
+		localStorage.setItem(_this.cookieKey, JSON.stringify(myLocations));
 		_this.loadRecients();
 	};
 	this.manageMetricToggle = function(isMetric) {
 		if (isMetric != null) {
 			_this.isMetric = isMetric;
-			Cookies.set('isMetricToggle', _this.isMetric);
+			localStorage.setItem('isMetricToggle', _this.isMetric);
 		} else {
-			var isSavedMetric = Cookies.get('isMetricToggle') != null ? Cookies.get('isMetricToggle') : false;
+			var isSavedMetric = localStorage.getItem('isMetricToggle') != null ? localStorage.getItem('isMetricToggle') : false;
 			_this.isMetric = isSavedMetric == 'true';
 			var tm = setTimeout(function() {
 				$('#metricToggle').toggleClass('active', _this.isMetric);
@@ -648,7 +648,7 @@ function newWeatherApp(params) {
 	};
 
 	this.loadRecients = function() {
-		var myLocations = Cookies.get(_this.cookieKey) != null ? JSON.parse(Cookies.get(_this.cookieKey)) : [];
+		var myLocations = localStorage.getItem(_this.cookieKey) != null ? JSON.parse(localStorage.getItem(_this.cookieKey)) : [];
 
 		$('#favoritesConatiner').empty();
 		if (myLocations.length) $('.custom-sidebar').show();
