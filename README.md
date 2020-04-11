@@ -4,6 +4,6 @@ Predict the climbing fun precentage based on a searched locations weather factor
 
 ## Collaborators
 
-Daniel Sarich
-Daniel Mazzone
+Daniel Sarich <br />
+Daniel Mazzone <br />
 
