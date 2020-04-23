@@ -1,4 +1,4 @@
-# Climbing Forcast Calculation
+# Climbing Forecast Calculation
 
 Predict the climbing fun precentage based on a searched locations weather factors.
 
