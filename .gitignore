@@ -1,8 +1,7 @@
 .vscode/
-weather/app/__pycache__/
-weather/__pycache__
-weather/config.py
-client/node_modules
+server/app/__pycache__/
+server/__pycache__
+server/config.py
 server/config.py
 
 .DS_Store
