@@ -1,6 +1,0 @@
-__pycache__/
-client/node_modules
-client/build
-client/.dockerignore
-client/Dockerfile
-client/Dockerfile.prod
