@@ -2,7 +2,7 @@
 server/app/__pycache__/
 server/__pycache__
 server/config.py
-server/config.py
+server/cfEnv/
 
 .DS_Store
 client/node_modules
