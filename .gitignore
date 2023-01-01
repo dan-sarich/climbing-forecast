@@ -1,12 +1,9 @@
 .vscode/
-weather/app/__pycache__/
-weather/__pycache__
-weather/config.py
-client/node_modules
+__pycache__
 server/config.py
 
 .DS_Store
-client/node_modules
+node_modules
 /dist
 
 # local env files
