@@ -1,5 +1,7 @@
 {
+  "name": "weather-app",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -8,7 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.10.1",
-    "nuxt": "3.8.2"
+    "@nuxt/devtools": "^1.0.5",
+    "@unocss/nuxt": "^0.58.0",
+    "nuxt": "^3.8.2",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5"
   }
 }

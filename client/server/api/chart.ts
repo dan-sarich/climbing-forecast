@@ -1,5 +1,5 @@
 import chartMock from '@/mocks/data.json'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(() => {
     return chartMock
   })
