@@ -12,11 +12,12 @@ import pytz
 import webbrowser
 import requests
 import json
+import os
 
 
 @app.route("/")
 def index():
-    PLACES_API_key = app.config['PLACES_API']
+    PLACES_API_key = os.environ.get('PLACES_API')
     return render_template('index.html', apiKey=PLACES_API_key, now=datetime.now().strftime('%s'))
 
 # This python function requires the coordinates of a place in lat and lon and returns: time, month, day, hour, whetherstatus, actual temperature, temp felt in sun, temp felt in shade,cloudiness,wind_act,humidity_act,rain_act,Probability fun in sun and shade
@@ -83,7 +84,7 @@ def getconditions():
     IR_violent = special.erfc((Rspace-Rcut_violent)*2.35482/Rwid_violent)/2
 
     # get the wheather
-    API_key = app.config['OWM_API_KEY']
+    API_key = os.environ.get('OWM_API_KEY')
     owm = OWM(API_key)
     fc = owm.three_hours_forecast_at_coords(float(lat), float(lng))
     f = fc.get_forecast()
