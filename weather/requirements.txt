@@ -1,9 +1,1 @@
 Flask==3.0.3
-gunicorn==19.5.0
-numpy==1.18.1
-scipy==1.4.1
-matplotlib==3.1.2
-pyowm==2.10.0
-DateTime==4.3
-pytz==2019.3
-python-dotenv==0.10.5
