@@ -1,4 +1,4 @@
-Flask==1.1.1
+Flask==3.0.3
 gunicorn==19.5.0
 numpy==1.18.1
 scipy==1.4.1
