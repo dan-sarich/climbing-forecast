@@ -6,12 +6,10 @@ client/node_modules
 server/config.py
 
 .DS_Store
-client/node_modules
 /dist
 
 # local env files
-.env.local
-.env.*.local
+.env
 
 # Log files
 npm-debug.log*
