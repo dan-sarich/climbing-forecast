@@ -1,8 +1,5 @@
 {
-  "version": 2,
-  "builds": [{"src":  "/weather/index.py", "use":  "@vercel/python"}],
-  "routes": [{"src":  "/(.*)", "dest":  "/weather/index.py"}],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/weather/index" }
+    { "source": "/(.*)", "destination": "/server/index" }
   ]
 }

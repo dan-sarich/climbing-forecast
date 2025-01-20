@@ -1,5 +1,5 @@
 .vscode/
-weather/app/__pycache__/
+server/__pycache__/
 weather/__pycache__
 weather/config.py
 client/node_modules
