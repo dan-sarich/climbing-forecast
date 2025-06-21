@@ -82,185 +82,248 @@ def getconditions():
     IR_strong = special.erfc((Rspace-Rcut_strong)*2.35482/Rwid_strong)/2
     IR_violent = special.erfc((Rspace-Rcut_violent)*2.35482/Rwid_violent)/2
 
-    # get the wheather
+    # get the weather
     API_key = app.config['OWM_API_KEY']
     owm = OWM(API_key)
-    fc = owm.three_hours_forecast_at_coords(float(lat), float(lng))
-    f = fc.get_forecast()
-    # Calculations alculating probability
-    time = []
-    time_global = []
-    temperature_act = []
-    wind_act = []
-    humidity_act = []
-    timehr = []
-    timeday = []
-    timemonth = []
-    cloudiness = []
-    rain_act = []
-    snow_act = []
-    status = []
-    P_act = []
-    IT_shade_felt = []
-    IT_sun_felt = []
-    IP_act = []
-    IWac = []
-    IRac = []
-    ISac = []
-    Tshade = []
-    Tsun = []
-    Tshade_felt = []
-    Tsun_felt = []
-    P_sun = []
-    P_shadow = []
+    forecast_client = owm.three_hours_forecast_at_coords(float(lat), float(lng))
+    forecast = forecast_client.get_forecast()
+    # Initialize data arrays for calculations and probability
+    local_times = []
+    utc_times = []
+    actual_temperatures = []
+    wind_speeds = []
+    humidity_values = []
+    hours = []
+    days = []
+    months = []
+    cloudiness_values = []
+    rain_amounts = []
+    snow_amounts = []
+    weather_statuses = []
+    precipitation_amounts = []
+    temperature_index_shade_felt = []
+    temperature_index_sun_felt = []
+    precipitation_index = []
+    wind_index = []
+    rain_index = []
+    snow_index = []
+    shade_temperatures = []
+    sun_temperatures = []
+    shade_felt_temperatures = []
+    sun_felt_temperatures = []
+    climbing_probability_sun = []
+    climbing_probability_shade = []
     # organize data
-    for weather in f:
+    for weather in forecast:
         date_str = str(weather.get_reference_time('date'))
         datetime_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S+00:00")
-        time_global.append(datetime_obj)
-        timelocal_dummy = datetime_obj + timedelta(minutes=Timezoneshift)
-        time.append(timelocal_dummy)
-        timehr.append(timelocal_dummy.hour)
-        timeday.append(timelocal_dummy.day)
-        timemonth.append(timelocal_dummy.month)
-        temperature_act.append(weather.get_temperature('celsius')['temp'])
-        wind_act.append(weather.get_wind()['speed']*3.6)
-        humidity_act.append(weather.get_humidity())
-        cloudiness.append(weather.get_clouds())
-        status.append(weather.get_detailed_status())
-        dummy = weather.get_rain()
-        if not bool(dummy) == False:
-            rain_act.append(dummy.get('3h', ""))
-        if not bool(dummy) == True:
-            rain_act.append(0)
-        dummy = weather.get_snow()
-        if not bool(dummy) == False:
-            snow_act.append(dummy.get('3h', ""))
-        if not bool(dummy) == True:
-            snow_act.append(0)
+        utc_times.append(datetime_obj)
+        local_time = datetime_obj + timedelta(minutes=Timezoneshift)
+        local_times.append(local_time)
+        hours.append(local_time.hour)
+        days.append(local_time.day)
+        months.append(local_time.month)
+        actual_temperatures.append(weather.get_temperature('celsius')['temp'])
+        wind_speeds.append(weather.get_wind()['speed']*3.6)
+        humidity_values.append(weather.get_humidity())
+        cloudiness_values.append(weather.get_clouds())
+        weather_statuses.append(weather.get_detailed_status())
+        rain_data = weather.get_rain()
+        if rain_data:
+            rain_amounts.append(rain_data.get('3h', 0))
+        else:
+            rain_amounts.append(0)
+        snow_data = weather.get_snow()
+        if snow_data:
+            snow_amounts.append(snow_data.get('3h', 0))
+        else:
+            snow_amounts.append(0)
     # calculations
     i = 0
-    while i < len(time):
-        Tshade.append(temperature_act[i])
-        if timehr[i] < sunrise or timehr[i] > sunset:
-            Tsun.append(temperature_act[i])
-        if timehr[i] >= sunrise and timehr[i] <= sunset:
-            Tsun.append(temperature_act[i]+sunfactor*(1-cloudiness[i]/100))
-        if Tshade[i] <= 10:
-            Tshade_felt.append(
-                13.12+0.6215*Tshade[i]-11.37*wind_act[i]**0.16+0.3965*Tshade[i]*wind_act[i]**0.16)
-        if Tshade[i] >= 20:
-            Tshade_felt.append(-8.784695 + 1.61139411*Tshade[i] + 2.338549*humidity_act[i] - 0.14611605*Tshade[i]*humidity_act[i] - 0.012308094*Tshade[i]**2 - 0.016424828 *
-                               humidity_act[i]**2 + 0.002211732*Tshade[i]**2*humidity_act[i] + 0.00072546*Tshade[i]*humidity_act[i]**2 - 0.000003582*Tshade[i]**2*humidity_act[i]**2)
-        if Tshade[i] > 10 and Tshade[i] < 20:
-            Tshade_felt.append(Tshade[i])
-        if Tsun[i] <= 10:
-            Tsun_felt.append(
-                13.12+0.6215*Tsun[i]-11.37*wind_act[i]**0.16+0.3965*Tsun[i]*wind_act[i]**0.16)
-        if Tsun[i] >= 20:
-            Tsun_felt.append(-8.784695 + 1.61139411*Tsun[i] + 2.338549*humidity_act[i] - 0.14611605*Tsun[i]*humidity_act[i] - 0.012308094*Tsun[i]**2 - 0.016424828 *
-                             humidity_act[i]**2 + 0.002211732*Tsun[i]**2*humidity_act[i] + 0.00072546*Tsun[i]*humidity_act[i]**2 - 0.000003582*Tsun[i]**2*humidity_act[i]**2)
-        if Tsun[i] > 10 and Tsun[i] < 20:
-            Tsun_felt.append(Tsun[i])
-        P_act.append(rain_act[i]+snow_act[i])
-        IT_shade_felt.append(gauss(Tshade_felt[i], Topt, Twid/2.35482))
-        IT_sun_felt.append(gauss(Tsun_felt[i], Topt, Twid/2.35482))
-        IP_act.append(special.erfc((P_act[i]-Pcut)*2.35482/Pwid)/2)
-        IWac.append(special.erfc((wind_act[i]-Wcut)*2.35482/Wwid)/2)
-        # caclulate wettness of rock based on rain
+    while i < len(local_times):
+        # Calculate shade temperature (same as actual temperature)
+        shade_temperatures.append(actual_temperatures[i])
+
+        # Calculate sun temperature (adjusted for sunlight based on time of day)
+        if hours[i] < sunrise or hours[i] > sunset:
+            # No sun adjustment during night hours
+            sun_temperatures.append(actual_temperatures[i])
+        else:
+            # Add sun factor adjusted by cloudiness during daylight hours
+            sun_temperatures.append(actual_temperatures[i] + sunfactor * (1 - cloudiness_values[i]/100))
+
+        # Calculate felt temperature in shade using wind chill or heat index formulas
+        if shade_temperatures[i] <= 10:
+            # Wind chill formula for cold temperatures
+            shade_felt_temperatures.append(
+                13.12 + 0.6215 * shade_temperatures[i] - 11.37 * wind_speeds[i]**0.16 + 0.3965 * shade_temperatures[i] * wind_speeds[i]**0.16)
+        elif shade_temperatures[i] >= 20:
+            # Heat index formula for hot temperatures
+            shade_felt_temperatures.append(-8.784695 + 1.61139411 * shade_temperatures[i] + 2.338549 * humidity_values[i] - 
+                               0.14611605 * shade_temperatures[i] * humidity_values[i] - 0.012308094 * shade_temperatures[i]**2 - 
+                               0.016424828 * humidity_values[i]**2 + 0.002211732 * shade_temperatures[i]**2 * humidity_values[i] + 
+                               0.00072546 * shade_temperatures[i] * humidity_values[i]**2 - 0.000003582 * shade_temperatures[i]**2 * humidity_values[i]**2)
+        else:
+            # For moderate temperatures, felt temperature equals actual temperature
+            shade_felt_temperatures.append(shade_temperatures[i])
+
+        # Calculate felt temperature in sun using wind chill or heat index formulas
+        if sun_temperatures[i] <= 10:
+            # Wind chill formula for cold temperatures
+            sun_felt_temperatures.append(
+                13.12 + 0.6215 * sun_temperatures[i] - 11.37 * wind_speeds[i]**0.16 + 0.3965 * sun_temperatures[i] * wind_speeds[i]**0.16)
+        elif sun_temperatures[i] >= 20:
+            # Heat index formula for hot temperatures
+            sun_felt_temperatures.append(-8.784695 + 1.61139411 * sun_temperatures[i] + 2.338549 * humidity_values[i] - 
+                             0.14611605 * sun_temperatures[i] * humidity_values[i] - 0.012308094 * sun_temperatures[i]**2 - 
+                             0.016424828 * humidity_values[i]**2 + 0.002211732 * sun_temperatures[i]**2 * humidity_values[i] + 
+                             0.00072546 * sun_temperatures[i] * humidity_values[i]**2 - 0.000003582 * sun_temperatures[i]**2 * humidity_values[i]**2)
+        else:
+            # For moderate temperatures, felt temperature equals actual temperature
+            sun_felt_temperatures.append(sun_temperatures[i])
+
+        # Calculate total precipitation
+        precipitation_amounts.append(rain_amounts[i] + snow_amounts[i])
+
+        # Calculate temperature indices for shade and sun
+        temperature_index_shade_felt.append(gauss(shade_felt_temperatures[i], Topt, Twid/2.35482))
+        temperature_index_sun_felt.append(gauss(sun_felt_temperatures[i], Topt, Twid/2.35482))
+
+        # Calculate precipitation and wind indices
+        precipitation_index.append(special.erfc((precipitation_amounts[i] - Pcut) * 2.35482 / Pwid) / 2)
+        wind_index.append(special.erfc((wind_speeds[i] - Wcut) * 2.35482 / Wwid) / 2)
+        # Calculate rock wetness based on rain history
         j = 0
-        LRainProb = []
+        rain_probability_list = []
         while j < i:
-            if rain_act[j] == 0:
-                LRainProb.append(1)
-            if rain_act[j] > 0 and rain_act[j] < 7.5:
-                drain = (j-i)*3
-                LRainProb.append(special.erfc(
-                    (drain-Rcut_light)*2.35482/Rwid_light)/2)
-            if rain_act[j] >= 7.5 and rain_act[j] < 30:
-                drain = (j-i)*3
-                LRainProb.append(special.erfc(
-                    (drain-Rcut_moderate)*2.35482/Rwid_moderate)/2)
-            if rain_act[j] >= 30 and rain_act[j] < 150:
-                drain = (j-i)*3
-                LRainProb.append(special.erfc(
-                    (drain-Rcut_strong)*2.35482/Rwid_strong)/2)
-            if rain_act[j] >= 150:
-                drain = (j-i)*3
-                LRainProb.append(special.erfc(
-                    (drain-Rcut_violent)*2.35482/Rwid_violent)/2)
-            # print(LRainProb)
-            j = j+1
+            if rain_amounts[j] == 0:
+                rain_probability_list.append(1)  # No rain means dry rock
+            else:
+                # Calculate hours since rain
+                hours_since_rain = (j-i)*3
+
+                # Determine wetness probability based on rain intensity
+                if rain_amounts[j] > 0 and rain_amounts[j] < 7.5:
+                    # Light rain
+                    rain_probability_list.append(special.erfc(
+                        (hours_since_rain-Rcut_light)*2.35482/Rwid_light)/2)
+                elif rain_amounts[j] >= 7.5 and rain_amounts[j] < 30:
+                    # Moderate rain
+                    rain_probability_list.append(special.erfc(
+                        (hours_since_rain-Rcut_moderate)*2.35482/Rwid_moderate)/2)
+                elif rain_amounts[j] >= 30 and rain_amounts[j] < 150:
+                    # Strong rain
+                    rain_probability_list.append(special.erfc(
+                        (hours_since_rain-Rcut_strong)*2.35482/Rwid_strong)/2)
+                else:  # rain_amounts[j] >= 150
+                    # Violent rain
+                    rain_probability_list.append(special.erfc(
+                        (hours_since_rain-Rcut_violent)*2.35482/Rwid_violent)/2)
+            j += 1
+
+        # Set rain index based on minimum probability (worst case)
         if i == 0:
-            IRac.append(1)
-        if i > 0:
-            IRac.append(np.min(LRainProb))
+            rain_index.append(1)  # First forecast point has no history
+        else:
+            rain_index.append(np.min(rain_probability_list))
+
+        # Calculate rock wetness based on snow history
         j = 0
-        LSnowProb = []
+        snow_probability_list = []
         while j < i:
-            if snow_act[j] == 0:
-                LSnowProb.append(1)
-            if snow_act[j] > 0 and snow_act[j] < 7.5:
-                dsnow = (j-i)*3
-                LSnowProb.append(special.erfc(
-                    (dsnow-Rcut_light)*2.35482/Rwid_light)/2)
-            if snow_act[j] >= 7.5 and snow_act[j] < 30:
-                dsnow = (j-i)*3
-                LSnowProb.append(special.erfc(
-                    (dsnow-Rcut_moderate)*2.35482/Rwid_moderate)/2)
-            if snow_act[j] >= 30 and snow_act[j] < 150:
-                dsnow = (j-i)*3
-                LSnowProb.append(special.erfc(
-                    (dsnow-Rcut_strong)*2.35482/Rwid_strong)/2)
-            if snow_act[j] >= 150:
-                dsnow = (j-i)*3
-                LSnowProb.append(special.erfc(
-                    (dsnow-Rcut_violent)*2.35482/Rwid_violent)/2)
-            # print(LRainProb)
-            j = j+1
+            if snow_amounts[j] == 0:
+                snow_probability_list.append(1)  # No snow means dry rock
+            else:
+                # Calculate hours since snow
+                hours_since_snow = (j-i)*3
+
+                # Determine wetness probability based on snow intensity
+                if snow_amounts[j] > 0 and snow_amounts[j] < 7.5:
+                    # Light snow
+                    snow_probability_list.append(special.erfc(
+                        (hours_since_snow-Rcut_light)*2.35482/Rwid_light)/2)
+                elif snow_amounts[j] >= 7.5 and snow_amounts[j] < 30:
+                    # Moderate snow
+                    snow_probability_list.append(special.erfc(
+                        (hours_since_snow-Rcut_moderate)*2.35482/Rwid_moderate)/2)
+                elif snow_amounts[j] >= 30 and snow_amounts[j] < 150:
+                    # Strong snow
+                    snow_probability_list.append(special.erfc(
+                        (hours_since_snow-Rcut_strong)*2.35482/Rwid_strong)/2)
+                else:  # snow_amounts[j] >= 150
+                    # Violent snow
+                    snow_probability_list.append(special.erfc(
+                        (hours_since_snow-Rcut_violent)*2.35482/Rwid_violent)/2)
+            j += 1
+
+        # Set snow index based on minimum probability (worst case)
         if i == 0:
-            ISac.append(1)
-        if i > 0:
-            ISac.append(np.min(LSnowProb))
-    # Climbing conditions
-        P_sun.append(100*(IT_sun_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
-        P_shadow.append(
-            100*(IT_shade_felt[i]*IWac[i]*IP_act[i]*IRac[i]*ISac[i]))
-        # test imperial
-        if isImperial == True:
-            temperature_act[i] = 9/5*temperature_act[i]+32
-            Tsun_felt[i] = 9/5*Tsun_felt[i]+32
-            Tshade_felt[i] = 9/5*Tshade_felt[i]+32
-            wind_act[i] = wind_act[i]/1.609344
-            rain_act[i] = rain_act[i]/25.4
-            snow_act[i] = snow_act[i]/25.4
+            snow_index.append(1)  # First forecast point has no history
+        else:
+            snow_index.append(np.min(snow_probability_list))
+        # Calculate climbing condition probabilities
+        # Combine all indices to get overall climbing probability
+        climbing_probability_sun.append(100 * (
+            temperature_index_sun_felt[i] * 
+            wind_index[i] * 
+            precipitation_index[i] * 
+            rain_index[i] * 
+            snow_index[i]
+        ))
+
+        climbing_probability_shade.append(100 * (
+            temperature_index_shade_felt[i] * 
+            wind_index[i] * 
+            precipitation_index[i] * 
+            rain_index[i] * 
+            snow_index[i]
+        ))
+
+        # Convert to imperial units if requested
+        if isImperial:
+            # Temperature: Celsius to Fahrenheit
+            actual_temperatures[i] = 9/5 * actual_temperatures[i] + 32
+            sun_felt_temperatures[i] = 9/5 * sun_felt_temperatures[i] + 32
+            shade_felt_temperatures[i] = 9/5 * shade_felt_temperatures[i] + 32
+
+            # Speed: km/h to mph
+            wind_speeds[i] = wind_speeds[i] / 1.609344
+
+            # Precipitation: mm to inches
+            rain_amounts[i] = rain_amounts[i] / 25.4
+            snow_amounts[i] = snow_amounts[i] / 25.4
+
+            # Update labels for imperial units
             label_accumulation = "in"
             label_speed = "mph"
             label_temp = "°F"
-        # round to one digit (rain and snow to two, inch is small)
-        temperature_act[i] = round(temperature_act[i], 1)
-        Tsun_felt[i] = round(Tsun_felt[i], 1)
-        Tshade_felt[i] = round(Tshade_felt[i], 1)
-        cloudiness[i] = cloudiness[i]
-        wind_act[i] = round(wind_act[i], 1)
-        humidity_act[i] = humidity_act[i]
-        rain_act[i] = round(rain_act[i], 2)
-        snow_act[i] = round(snow_act[i], 2)
-        P_sun[i] = round(P_sun[i], 1)
-        P_shadow[i] = round(P_shadow[i], 1)
-        i = i+1
+
+        # Round values for display
+        actual_temperatures[i] = round(actual_temperatures[i], 1)
+        sun_felt_temperatures[i] = round(sun_felt_temperatures[i], 1)
+        shade_felt_temperatures[i] = round(shade_felt_temperatures[i], 1)
+        # cloudiness_values doesn't need rounding as it's already an integer percentage
+        wind_speeds[i] = round(wind_speeds[i], 1)
+        # humidity_values doesn't need rounding as it's already an integer percentage
+        rain_amounts[i] = round(rain_amounts[i], 2)  # Two decimal places for precipitation
+        snow_amounts[i] = round(snow_amounts[i], 2)  # Two decimal places for precipitation
+        climbing_probability_sun[i] = round(climbing_probability_sun[i], 1)
+        climbing_probability_shade[i] = round(climbing_probability_shade[i], 1)
+
+        # Move to next forecast point
+        i += 1
 
     resp_json = {
-        "time": time_global,
-        "timemonth": timemonth,
-        "timeday": timeday,
-        "timehr": timehr,
-        "status": status,
+        "time": utc_times,
+        "timemonth": months,
+        "timeday": days,
+        "timehr": hours,
+        "status": weather_statuses,
         "chart_pairing": {
             "rain_chart": {
-                "rows": [rain_act],
+                "rows": [rain_amounts],
                 "dataSet_labels": ["Accumulation (" + label_accumulation + ")"],
-                "labels": time,
+                "labels": local_times,
                 "axis_labels": {
                     "yAxis": "Accumulation (" + label_accumulation + ")",
                     "xAxis": ""
@@ -271,9 +334,9 @@ def getconditions():
                 "fullScreen": False
             },
             "snow_chart": {
-                "rows": [snow_act],
+                "rows": [snow_amounts],
                 "dataSet_labels": ["Accumulation (" + label_accumulation + ")"],
-                "labels": time,
+                "labels": local_times,
                 "axis_labels": {
                     "yAxis": "Accumulation (" + label_accumulation + ")",
                     "xAxis": ""
@@ -284,9 +347,9 @@ def getconditions():
                 "fullScreen": False
             },
             "cloudiness_chart": {
-                "rows": [cloudiness],
+                "rows": [cloudiness_values],
                 "dataSet_labels": ["Cloudiness (" + label_percent + ")"],
-                "labels": time,
+                "labels": local_times,
                 "axis_labels": {
                     "yAxis": "Cloudiness (" + label_percent + ")",
                     "xAxis": ""
@@ -297,9 +360,9 @@ def getconditions():
                 "fullScreen": False
             },
             "humidity_chart": {
-                "rows": [humidity_act],
+                "rows": [humidity_values],
                 "dataSet_labels": ["Humidity (" + label_percent + ")"],
-                "labels": time,
+                "labels": local_times,
                 "title": "Humidity",
                 "axis_labels": {
                     "yAxis": "Humidity (" + label_percent + ")",
@@ -310,9 +373,9 @@ def getconditions():
                 "fullScreen": False
             },
             "wind_chart": {
-                "rows": [wind_act],
+                "rows": [wind_speeds],
                 "dataSet_labels": ["Wind (" + label_speed + ")"],
-                "labels": time,
+                "labels": local_times,
                 "title": "Wind",
                 "axis_labels": {
                     "yAxis": "Wind (" + label_speed + ")",
@@ -323,9 +386,9 @@ def getconditions():
                 "fullScreen": False
             },
             "temperature_felt_chart": {
-                "rows": [Tsun_felt, Tshade_felt, temperature_act],
+                "rows": [sun_felt_temperatures, shade_felt_temperatures, actual_temperatures],
                 "dataSet_labels": ["Sun", "Shade", "Actual"],
-                "labels": time,
+                "labels": local_times,
                 "title": "Temperature Felt",
                 "format": label_temp,
                 "axis_labels": {
@@ -336,9 +399,9 @@ def getconditions():
                 "fullScreen": True
             },
             "fun_chart": {
-                "rows": [P_sun, P_shadow],
+                "rows": [climbing_probability_sun, climbing_probability_shade],
                 "dataSet_labels": ["In Sun", "In Shade"],
-                "labels": time,
+                "labels": local_times,
                 "title": "Climbing Fun",
                 "format": label_percent,
                 "axis_labels": {
