@@ -3,6 +3,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Apply dark mode by default */
+@layer base {
+  html {
+    @apply bg-dark text-dark-primary;
+  }
+
+  body {
+    @apply bg-dark text-dark-primary;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-dark-primary;
+  }
+
+  a {
+    @apply text-accent hover:text-accent-light;
+  }
+}
+
 /* Custom styles that extend Tailwind */
 @layer components {
   .welcome-container {
@@ -10,10 +29,29 @@
   }
 
   .welcome-title {
-    @apply text-4xl mb-6;
+    @apply text-4xl mb-6 text-dark-primary;
   }
 
   .welcome-subtitle {
-    @apply text-xl mb-8 text-secondary;
+    @apply text-xl mb-8 text-dark-secondary;
+  }
+
+  /* Card styling for dark mode */
+  .card {
+    @apply bg-dark-card border border-dark-border rounded-lg shadow-md;
+  }
+
+  /* Button styling with accent color */
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-dark text-white font-bold py-2 px-4 rounded;
+  }
+
+  /* Alert styling for dark mode */
+  .alert-info {
+    @apply bg-dark-lighter border-l-4 border-accent text-dark-primary p-4 rounded;
+  }
+
+  .alert-error {
+    @apply bg-dark-lighter border-l-4 border-red-500 text-dark-primary p-4 rounded;
   }
 }

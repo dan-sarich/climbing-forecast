@@ -56,5 +56,27 @@ export default defineNuxtConfig({
   // Development server configuration
   devServer: {
     port: 3000
+  },
+
+  // Vite configuration for HMR
+  // These settings optimize Hot Module Replacement (HMR) for faster development
+  // The configuration is especially tuned for Windows environments
+  vite: {
+    server: {
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 24678,
+        clientPort: 24678, // Explicitly set client port for Windows
+        timeout: 120000    // Increase timeout for better reliability
+      },
+      watch: {
+        usePolling: true,  // Use polling for file changes (better for Windows)
+        interval: 100      // Polling interval in ms
+      }
+    },
+    optimizeDeps: {
+      include: ['vue', 'vue-router'] // Pre-bundle these dependencies for faster HMR
+    }
   }
 })

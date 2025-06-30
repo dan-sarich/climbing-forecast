@@ -5,30 +5,28 @@
       <p class="welcome-subtitle">
         Predict climbing conditions based on weather forecasts to plan your perfect climbing day.
       </p>
-      <div class="flex justify-center">
-        <div class="w-full md:w-2/3 lg:w-1/2">
-          <div class="bg-white rounded-lg shadow-md mb-4 overflow-hidden">
-            <div class="p-6">
-              <p class="mb-4">
-                This application helps climbers determine the best time to climb based on weather conditions.
-                It analyzes temperature, wind, precipitation, and other factors to calculate a "climbing fun" percentage.
-              </p>
-              <p class="mb-4">
-                The backend is powered by Nest.js, which processes weather data from OpenWeatherMap and applies
-                climbing-specific algorithms to predict conditions.
-              </p>
-              <a class="inline-block bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded" href="/api/weather" target="_blank">
-                <i class="fas fa-cloud-sun"></i> Check API
-              </a>
-            </div>
+    </div>
+    <div class="flex justify-center mt-4">
+      <div class="w-full">
+        <div class="alert-info mb-4">
+          <i class="fas fa-info-circle text-accent"></i> Full weather dashboard coming soon!
+        </div>
+
+        <div v-if="data" class="bg-dark-card border border-dark-border rounded-lg shadow-md mb-4 overflow-hidden">
+          <div class="p-6">
+            <h2 class="text-xl font-bold mb-2 text-dark-primary">Boulder, Colorado Weather Data</h2>
+            <!-- D3 Charts for each chart_pairing -->
+            <WeatherChart
+              v-for="(chart, chartName) in data?.chart_pairing || []"
+              :key="chartName"
+              :chart-id="chartName"
+              :chart-data="chart"
+            />
           </div>
         </div>
-      </div>
-      <div class="flex justify-center mt-4">
-        <div class="w-full md:w-2/3 lg:w-1/2">
-          <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded">
-            <i class="fas fa-info-circle"></i> Full weather dashboard coming soon!
-          </div>
+
+        <div v-if="error" class="alert-error">
+          <i class="fas fa-exclamation-circle text-red-500"></i> {{ error }}
         </div>
       </div>
     </div>
@@ -39,5 +37,18 @@
 // Using script setup for Composition API
 useHead({
   title: 'Climbing Forecast - Welcome'
+})
+
+const { data, error } = useFetch('/api/weather/data', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    lat: 40.0150,
+    lng: -105.2705,
+    imperial: true,
+    utc_offset: -7
+  })
 })
 </script>
