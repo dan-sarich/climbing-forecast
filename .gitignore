@@ -25,11 +25,9 @@ server/dist/
 
 # Environment files
 server/.env
-server/.env
 .env.*.local
 client/.env
 client/.env.local
-server/.env
 server/.env.local
 
 # Log files
