@@ -107,8 +107,8 @@ const createD3Chart = () => {
     .style('fill', '#9E9E9E') // Dark mode text color
     .text(props.chartData.axis_labels.yAxis);
 
-  // Define color scale with pale green accent
-  const colorPalette = ['#8BC34A', '#A4D070', '#689F38', '#558B2F', '#33691E'];
+  // Define color scale with modern blue accent
+  const colorPalette = ['#3B82F6', '#60A5FA', '#2563EB', '#1D4ED8', '#1E40AF'];
   const color = d3.scaleOrdinal(colorPalette);
 
   // Create line generator

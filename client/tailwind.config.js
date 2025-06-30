@@ -13,14 +13,14 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#8BC34A', // Pale green as primary color
-          hover: '#7CB342',
-          border: '#689F38'
+          DEFAULT: '#3B82F6', // Modern blue as primary color
+          hover: '#2563EB',
+          border: '#1E40AF'
         },
         accent: {
-          DEFAULT: '#8BC34A', // Pale green accent
-          light: '#A4D070',
-          dark: '#689F38'
+          DEFAULT: '#3B82F6', // Modern blue accent
+          light: '#60A5FA',
+          dark: '#1D4ED8'
         },
         dark: {
           DEFAULT: '#1E1E1E', // Dark background
