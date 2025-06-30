@@ -45,26 +45,29 @@ const createD3Chart = () => {
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
-  // Parse dates for x-axis
-  const parseTime = d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
-  const dates = props.chartData.labels.map(d => parseTime(d));
+  // Parse dates for x-axis using native Date to handle any ISO string
+  const dates = props.chartData.labels.map(d => new Date(d));
 
   // Set x scale
   const x = d3.scaleTime()
     .domain(d3.extent(dates))
     .range([0, width]);
 
-  // Set y scale
+  // Set y scale using extent with padding so all values are visible
   const allValues = props.chartData.rows.flat();
+  const [minValue, maxValue] = d3.extent(allValues);
+  const padding = (maxValue - minValue) * 0.1;
   const y = d3.scaleLinear()
-    .domain([0, d3.max(allValues) * 1.1]) // Add 10% padding at the top
+    .domain([minValue - padding, maxValue + padding])
     .range([height, 0]);
 
   // Add X axis
   svg.append('g')
     .attr('transform', `translate(0,${height})`)
     .attr('class', 'text-dark-secondary')
-    .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat('%m/%d %H:%M')))
+    .call(d3.axisBottom(x)
+      .ticks(Math.min(dates.length, 8))
+      .tickFormat(d3.timeFormat('%m/%d %H:%M')))
     .selectAll('text')
     .style('text-anchor', 'end')
     .attr('dx', '-.8em')
@@ -113,7 +116,7 @@ const createD3Chart = () => {
     .x((d, i) => x(dates[i]))
     .y(d => y(d));
 
-  // Add lines for each data series
+  // Add lines and points for each data series
   props.chartData.rows.forEach((dataPoints, i) => {
     svg.append('path')
       .datum(dataPoints)
@@ -121,6 +124,16 @@ const createD3Chart = () => {
       .attr('stroke', color(i))
       .attr('stroke-width', 2)
       .attr('d', line);
+
+    svg.selectAll(`circle.series-${i}`)
+      .data(dataPoints)
+      .enter()
+      .append('circle')
+      .attr('class', `series-${i}`)
+      .attr('cx', (d, idx) => x(dates[idx]))
+      .attr('cy', d => y(d))
+      .attr('r', 2)
+      .attr('fill', color(i));
   });
 
   // Add legend if needed
