@@ -298,106 +298,120 @@ export class WeatherService {
       climbing_probability_shade[i] = Math.round(climbing_probability_shade[i] * 10) / 10;
     }
 
-    // Format response JSON
+    // Format response JSON with standardized structure
     return {
-      time: utc_times,
-      timemonth: months,
-      timeday: days,
-      timehr: hours,
+      time: {
+        utc: utc_times,
+        local: local_times,
+        month: months,
+        day: days,
+        hour: hours,
+      },
       status: weather_statuses,
-      chart_pairing: {
-        rain_chart: {
+      charts: [
+        {
+          id: 'rain_chart',
           rows: [rain_amounts],
           dataSet_labels: [`Accumulation (${label_accumulation})`],
           labels: local_times,
           axis_labels: {
             yAxis: `Accumulation (${label_accumulation})`,
-            xAxis: ""
+            xAxis: '',
           },
-          title: "Rain Accumulation",
+          title: 'Rain Accumulation',
           format: label_accumulation,
-          show_legend: "none",
-          fullScreen: false
+          show_legend: 'none',
+          fullScreen: false,
         },
-        snow_chart: {
+        {
+          id: 'snow_chart',
           rows: [snow_amounts],
           dataSet_labels: [`Accumulation (${label_accumulation})`],
           labels: local_times,
           axis_labels: {
             yAxis: `Accumulation (${label_accumulation})`,
-            xAxis: ""
+            xAxis: '',
           },
-          title: "Snow Accumulation",
+          title: 'Snow Accumulation',
           format: label_accumulation,
-          show_legend: "none",
-          fullScreen: false
+          show_legend: 'none',
+          fullScreen: false,
         },
-        cloudiness_chart: {
+        {
+          id: 'cloudiness_chart',
           rows: [cloudiness_values],
           dataSet_labels: [`Cloudiness (${label_percent})`],
           labels: local_times,
           axis_labels: {
             yAxis: `Cloudiness (${label_percent})`,
-            xAxis: ""
+            xAxis: '',
           },
-          title: "Cloudiness",
+          title: 'Cloudiness',
           format: label_percent,
-          show_legend: "none",
-          fullScreen: false
+          show_legend: 'none',
+          fullScreen: false,
         },
-        humidity_chart: {
+        {
+          id: 'humidity_chart',
           rows: [humidity_values],
           dataSet_labels: [`Humidity (${label_percent})`],
           labels: local_times,
-          title: "Humidity",
+          title: 'Humidity',
           axis_labels: {
             yAxis: `Humidity (${label_percent})`,
-            xAxis: ""
+            xAxis: '',
           },
           format: label_percent,
-          show_legend: "none",
-          fullScreen: false
+          show_legend: 'none',
+          fullScreen: false,
         },
-        wind_chart: {
+        {
+          id: 'wind_chart',
           rows: [wind_speeds],
           dataSet_labels: [`Wind (${label_speed})`],
           labels: local_times,
-          title: "Wind",
+          title: 'Wind',
           axis_labels: {
             yAxis: `Wind (${label_speed})`,
-            xAxis: ""
+            xAxis: '',
           },
           format: label_speed,
-          show_legend: "none",
-          fullScreen: false
+          show_legend: 'none',
+          fullScreen: false,
         },
-        temperature_felt_chart: {
-          rows: [sun_felt_temperatures, shade_felt_temperatures, actual_temperatures],
-          dataSet_labels: ["Sun", "Shade", "Actual"],
+        {
+          id: 'temperature_felt_chart',
+          rows: [
+            sun_felt_temperatures,
+            shade_felt_temperatures,
+            actual_temperatures,
+          ],
+          dataSet_labels: ['Sun', 'Shade', 'Actual'],
           labels: local_times,
-          title: "Temperature Felt",
+          title: 'Temperature Felt',
           format: label_temp,
           axis_labels: {
             yAxis: `Temperature Felt (${label_temp})`,
-            xAxis: ""
+            xAxis: '',
           },
-          show_legend: "",
-          fullScreen: true
+          show_legend: '',
+          fullScreen: true,
         },
-        fun_chart: {
+        {
+          id: 'fun_chart',
           rows: [climbing_probability_sun, climbing_probability_shade],
-          dataSet_labels: ["In Sun", "In Shade"],
+          dataSet_labels: ['In Sun', 'In Shade'],
           labels: local_times,
-          title: "Climbing Fun",
+          title: 'Climbing Fun',
           format: label_percent,
           axis_labels: {
             yAxis: `Climbing Fun (${label_percent})`,
-            xAxis: ""
+            xAxis: '',
           },
-          show_legend: "",
-          fullScreen: true
-        }
-      }
+          show_legend: '',
+          fullScreen: true,
+        },
+      ],
     };
   }
 }

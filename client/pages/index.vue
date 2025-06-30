@@ -15,11 +15,11 @@
         <div v-if="data" class="bg-dark-card border border-dark-border rounded-lg shadow-md mb-4 overflow-hidden">
           <div class="p-6">
             <h2 class="text-xl font-bold mb-2 text-dark-primary">Boulder, Colorado Weather Data</h2>
-            <!-- D3 Charts for each chart_pairing -->
+            <!-- D3 Charts -->
             <WeatherChart
-              v-for="(chart, chartName) in data?.chart_pairing || []"
-              :key="chartName"
-              :chart-id="chartName"
+              v-for="chart in data?.charts || []"
+              :key="chart.id"
+              :chart-id="chart.id"
               :chart-data="chart"
             />
           </div>
